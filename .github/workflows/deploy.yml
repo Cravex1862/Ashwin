@@ -33,6 +33,6 @@ jobs:
           script: |
             cd /var/www/react-app
             git pull origin main
-            sudo cp -r ~/ashwin/build/* /var/www/html/
+            sudo cp -r build/* /var/www/html/
             sudo systemctl reload nginx
             echo "✅ Deployed at $(date)"
