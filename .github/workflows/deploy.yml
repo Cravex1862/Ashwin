@@ -40,6 +40,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          envs: VPS_SUDO_PASSWORD
           script: |
             set -e
             APP_DIR="/var/www/ashwin-portfolio"
@@ -68,5 +69,5 @@ jobs:
             fi
 
             rm -rf "$HOME/ci_build" || true
-            sudo systemctl reload nginx
+            echo "$VPS_SUDO_PASSWORD" | sudo -S systemctl reload nginx
             echo "✅ Deployed at $(date)"
