@@ -41,11 +41,36 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /var/www/ashwin-porfolio
-            git pull origin main
+            set -e
+            APP_DIR="/var/www/ashwin-portfolio"
+            if [ ! -d "$APP_DIR" ]; then
+              APP_DIR="/var/www/react-app"
+            fi
+            echo "Using APP_DIR=$APP_DIR"
+
+            BUILD_OK=false
+            if cd "$APP_DIR"; then
+              echo "Pulling latest code..."
+              git reset --hard || true
+              git clean -fd || true
+              if git pull origin main; then
+                echo "Installing deps and building on VPS..."
+                (npm ci || npm install) && node node_modules/react-scripts/bin/react-scripts.js build && BUILD_OK=true
+              fi
+            fi
+
             sudo mkdir -p /var/www/html
             sudo rm -rf /var/www/html/*
-            sudo cp -r ~/ci_build/* /var/www/html/
-            rm -rf ~/ci_build
+
+            if [ "$BUILD_OK" = true ]; then
+              echo "Using repo-built artifacts"
+              sudo cp -r "$APP_DIR/build"/* /var/www/html/
+            else
+              echo "Repo build failed or skipped; using uploaded artifacts from $HOME/ci_build"
+              ls -lah "$HOME/ci_build" || true
+              sudo cp -r "$HOME/ci_build"/* /var/www/html/
+            fi
+
+            rm -rf "$HOME/ci_build" || true
             sudo systemctl reload nginx
             echo "✅ Deployed at $(date)"
