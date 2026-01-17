@@ -70,7 +70,5 @@ jobs:
 
             rm -rf "$HOME/ci_build" || true
             echo "Reloading nginx"
-            sudo -S -k -p "" -n systemctl reload nginx <<'EOF'
-${VPS_SUDO_PASSWORD}
-EOF
+            echo "$VPS_SUDO_PASSWORD" | sudo -S systemctl reload nginx
             echo "✅ Deployed at $(date)"
