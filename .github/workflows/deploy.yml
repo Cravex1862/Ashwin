@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "build/*"
-          target: "/var/www/react-app/build"
+          target: "~/ci_build"
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -41,9 +41,11 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /var/www/react-app
+            cd /var/www/ashwin-porfolio
             git pull origin main
+            sudo mkdir -p /var/www/html
             sudo rm -rf /var/www/html/*
-            sudo cp -r build/* /var/www/html/
+            sudo cp -r ~/ci_build/* /var/www/html/
+            rm -rf ~/ci_build
             sudo systemctl reload nginx
             echo "✅ Deployed at $(date)"
