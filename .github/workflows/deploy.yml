@@ -69,6 +69,4 @@ jobs:
             fi
 
             rm -rf "$HOME/ci_build" || true
-            echo "Reloading nginx"
-            sudo systemctl reload nginx
             echo "✅ Deployed at $(date)"
