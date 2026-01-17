@@ -56,3 +56,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Skills icon sizing */
+.skills-grid img {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+}

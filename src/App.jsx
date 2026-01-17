@@ -12,11 +12,11 @@ function App() {
     { name: 'HTML5', icon: '/icons/html5.png' },
     { name: 'CSS3', icon: '/icons/css3.png' },
     { name: 'JavaScript', icon: '/icons/javascript.png' },
-    { name: 'Figma', icon: '/icons/figma.png' },
-    { name: 'MongoDB', icon: '/icons/mongodb.png' },
-    { name: 'Express.js', icon: '/icons/expressjs.png' },
     { name: 'React', icon: '/icons/react.png' },
     { name: 'Node.js', icon: '/icons/nodejs.png' },
+    { name: 'MongoDB', icon: '/icons/mongodb.webp' },
+    { name: 'Figma', icon: '/icons/figma.png' },
+    { name: 'Tailwind', icon: '/icons/tailwind.webp' },
   ];
 
   return (
@@ -283,7 +283,7 @@ function App() {
             <h3 className="text-2xl font-bold mb-6">My Skills</h3>
             
             {/* Skills Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 skills-grid">
               {skills.map((skill, index) => (
                 <div
                   key={index}
@@ -374,8 +374,8 @@ function App() {
                     <div className="w-12"></div>
                   </div>
                   
-                  {/* Code Editor Content */}
                   <div className="bg-[#1e1e1e] p-6 font-mono text-sm">
+                    {/* Code Editor Content */}
                     <div className="space-y-1.5">
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">1</span>
@@ -493,12 +493,14 @@ function App() {
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">20</span>
+                        {/* Start coding session */}
                         <span className="text-gray-500">// Start coding session</span>
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">21</span>
                         <span className="text-[#dcdcaa]">drinkCoffee</span>
                         <span className="text-white">();</span>
+                        {/* ☕ First cup! */}
                         <span className="text-gray-500"> // ☕ First cup!</span>
                       </div>
                     </div>
