@@ -22,7 +22,8 @@ jobs:
       - name: Install & Build
         run: |
           npm install
-          npm run build
+          ls -l node_modules/.bin/react-scripts || true
+          node node_modules/react-scripts/bin/react-scripts.js build
 
       - name: Upload build to VPS
         uses: appleboy/scp-action@v0.1.7
