@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Envelope, GithubLogo, StackOverflowLogo } from "@phosphor-icons/react";
+
 
 function App() {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -285,12 +287,24 @@ function App() {
               {skills.map((skill, index) => (
                 <div
                   key={index}
-                  className="aspect-square bg-white rounded-lg flex items-center justify-center hover:scale-105 transition cursor-pointer border-2 border-gray-700 p-4"
+                  className="aspect-square rounded-lg flex items-center justify-center hover:scale-105 transition cursor-pointer p-4 relative group overflow-hidden"
                 >
+                  {/* Static border on default state */}
+                  <span className="absolute inset-0 rounded border-2 border-gray-700 group-hover:border-transparent transition"></span>
+                  
+                  {/* Animated gradient border on hover */}
+                  <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
+                    <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                  </span>
+                  
+                  {/* Background */}
+                  <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
+                  
+                  {/* Image */}
                   <img 
                     src={skill.icon} 
                     alt={skill.name} 
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain relative z-10"
                   />
                 </div>
               ))}
@@ -301,8 +315,8 @@ function App() {
 
       {/* Contact */}
       <section id="contact" className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="flex flex-col lg:flex-row gap-12 items-start lg:items-center">
             {/* Left Side */}
             <div className="flex-1">
               <h3 className="text-3xl font-bold mb-4">
@@ -311,7 +325,7 @@ function App() {
               <p className="text-gray-400 mb-6">
                 I'm open for freelance projects, collaborations, or just chat. Let's connect!
               </p>
-              <button className="px-6 py-3 rounded flex items-center gap-2 font-semibold relative group overflow-hidden">
+              <a href="mailto:ashwinchoudhury1310@gmail.com" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden no-underline">
                 <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                   <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
                     <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
@@ -322,37 +336,183 @@ function App() {
                 </span>
                 <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
                 <span className="relative z-10 flex items-center gap-2">
-                  <span className="text-2xl">&lt;/&gt;</span>
+                  <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                   <span>Contact</span>
                 </span>
-              </button>
+              </a>
               <div className="flex gap-4 mt-4">
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 hover:scale-110 transition">
-                  <img src="/icons/github.png" alt="GitHub" className="w-full h-full object-contain" />
+                <a href="https://github.com/Cravex1862" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
+                  <GithubLogo size={32} weight="duotone" className="bg-gradient-to-r from-[#76B2F0] to-[#F61BA9]" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 hover:scale-110 transition">
-                  <img src="/icons/linkedin.png" alt="LinkedIn" className="w-full h-full object-contain" />
+                <a href="https://stackoverflow.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
+                  <StackOverflowLogo size={32} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                 </a>
               </div>
             </div>
 
-            {/* Right Side - Code Snippet */}
-            <div className="flex-1 w-full lg:max-w-md">
-              <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 border-2 border-cyan-500/50 rounded-lg p-6">
-                <pre className="text-xs text-cyan-400 font-mono overflow-x-auto">
-                  <code>{`// Hi, my "Hi" idea is the "Metaverse". -->
-// And here's how I see it:
-
-const Idea = {
-  Name: "The Metaverse",
-  About: "The digital universe",
-  Description: "People can interact, share... [truncated]
-  From: "Facebook Inc. Rebranded",
-  To: "Meta Inc.",
-  Status: "In Progress..."
-};
-// _getStarted_`}</code>
-                </pre>
+            {/* Right Side - VS Code Desktop Mockup */}
+            <div className="flex-1 w-full lg:max-w-2xl flex items-center justify-center" style={{ perspective: '1500px' }}>
+              <div 
+                className="w-full transition-transform duration-500"
+                style={{ transform: 'rotateY(-25deg) rotateX(8deg)', transformStyle: 'preserve-3d' }}
+              >
+                {/* Desktop Window */}
+                <div className="bg-[#1e1e1e] rounded-lg overflow-hidden shadow-2xl border border-gray-700">
+                  {/* Window Title Bar */}
+                  <div className="bg-[#323233] px-5 py-3 flex items-center justify-between border-b border-gray-800">
+                    <div className="flex gap-2">
+                      <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+                      <div className="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+                      <div className="w-3 h-3 rounded-full bg-[#28c840]"></div>
+                    </div>
+                    <div className="text-sm text-gray-400 flex items-center gap-2">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M14.773 3.485l-.78-.184-2.108 2.096-1.194-1.216 2.056-2.157-.18-.792a4.42 4.42 0 0 0-1.347-.228 3.64 3.64 0 0 0-1.457.28 3.824 3.824 0 0 0-1.186.84 3.736 3.736 0 0 0-.875 1.265 3.938 3.938 0 0 0 0 2.966 3.736 3.736 0 0 0 .875 1.265l.066.066-.267.271a.5.5 0 0 0-.133.34v.001l-.066 1.38a.5.5 0 0 0 .5.5h1.38a.5.5 0 0 0 .34-.133l.271-.267.066.066a3.824 3.824 0 0 0 1.265.875 3.938 3.938 0 0 0 2.966 0 3.824 3.824 0 0 0 1.265-.875 3.736 3.736 0 0 0 .84-1.186 3.64 3.64 0 0 0 .28-1.457 4.42 4.42 0 0 0-.228-1.347z"/>
+                      </svg>
+                      <span>coffeeCounter.js</span>
+                    </div>
+                    <div className="w-12"></div>
+                  </div>
+                  
+                  {/* Code Editor Content */}
+                  <div className="bg-[#1e1e1e] p-6 font-mono text-sm">
+                    <div className="space-y-1.5">
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">1</span>
+                        <span className="text-gray-500">// Easter Egg: Developer's Coffee Tracker ☕</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">2</span>
+                        <span></span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">3</span>
+                        <span className="text-[#569cd6]">let </span>
+                        <span className="text-[#9cdcfe]">cupsOfCoffee </span>
+                        <span className="text-white">= </span>
+                        <span className="text-[#b5cea8]">0</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">4</span>
+                        <span className="text-[#569cd6]">let </span>
+                        <span className="text-[#9cdcfe]">productivity </span>
+                        <span className="text-white">= </span>
+                        <span className="text-[#b5cea8]">50</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">5</span>
+                        <span></span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">6</span>
+                        <span className="text-[#569cd6]">function </span>
+                        <span className="text-[#dcdcaa]">drinkCoffee</span>
+                        <span className="text-white">() {'{'}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">7</span>
+                        <span className="ml-4 text-[#9cdcfe]">cupsOfCoffee</span>
+                        <span className="text-white">++;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">8</span>
+                        <span className="ml-4 text-[#9cdcfe]">productivity </span>
+                        <span className="text-white">+= </span>
+                        <span className="text-[#b5cea8]">20</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">9</span>
+                        <span></span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">10</span>
+                        <span className="ml-4 text-[#569cd6]">if </span>
+                        <span className="text-white">(</span>
+                        <span className="text-[#9cdcfe]">cupsOfCoffee </span>
+                        <span className="text-white">&gt; </span>
+                        <span className="text-[#b5cea8]">5</span>
+                        <span className="text-white">) {'{'}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">11</span>
+                        <span className="ml-8 text-[#9cdcfe]">productivity </span>
+                        <span className="text-white">= </span>
+                        <span className="text-[#b5cea8]">0</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">12</span>
+                        <span className="ml-8 text-[#dcdcaa]">console</span>
+                        <span className="text-white">.</span>
+                        <span className="text-[#dcdcaa]">log</span>
+                        <span className="text-white">(</span>
+                        <span className="text-[#ce9178]">"Too much caffeine! 😵"</span>
+                        <span className="text-white">);</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">13</span>
+                        <span className="ml-8 text-[#569cd6]">return </span>
+                        <span className="text-[#ce9178]">"Time to sleep! 😴"</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">14</span>
+                        <span className="ml-4 text-white">{'}'}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">15</span>
+                        <span></span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">16</span>
+                        <span className="ml-4 text-[#dcdcaa]">console</span>
+                        <span className="text-white">.</span>
+                        <span className="text-[#dcdcaa]">log</span>
+                        <span className="text-white">(</span>
+                        <span className="text-[#ce9178]">`Productivity: ${'{'}</span>
+                        <span className="text-[#9cdcfe]">productivity</span>
+                        <span className="text-[#ce9178]">{'}'}`</span>
+                        <span className="text-white">);</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">17</span>
+                        <span className="ml-4 text-[#569cd6]">return </span>
+                        <span className="text-[#ce9178]">"Keep coding! 💪☕"</span>
+                        <span className="text-white">;</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">18</span>
+                        <span className="text-white">{'}'}</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">19</span>
+                        <span></span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">20</span>
+                        <span className="text-gray-500">// Start coding session</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-gray-600 w-8 text-right mr-4">21</span>
+                        <span className="text-[#dcdcaa]">drinkCoffee</span>
+                        <span className="text-white">();</span>
+                        <span className="text-gray-500"> // ☕ First cup!</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Status Bar */}
+                  <div className="bg-[#007acc] px-4 py-1 flex items-center justify-between text-xs text-white">
+                    <div className="flex items-center gap-3">
+                      <span>⚡ JavaScript</span>
+                      <span>UTF-8</span>
+                    </div>
+                    <div>Ln 4, Col 7</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
