@@ -379,7 +379,7 @@ function App() {
                     <div className="space-y-1.5">
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">1</span>
-                        <span className="text-gray-500">// Easter Egg: Developer's Coffee Tracker ☕</span>
+                        <span className="text-gray-500">{'// Easter Egg: Developer\'s Coffee Tracker ☕'}</span>
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">2</span>
@@ -493,13 +493,13 @@ function App() {
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">20</span>
-                        <span className="text-gray-500">// Start coding session</span>
+                        <span className="text-gray-500">{'// Start coding session'}</span>
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">21</span>
                         <span className="text-[#dcdcaa]">drinkCoffee</span>
                         <span className="text-white">();</span>
-                        <span className="text-gray-500"> // ☕ First cup!</span>
+                        <span className="text-gray-500">{' // ☕ First cup!'}</span>
                       </div>
                     </div>
                   </div>
