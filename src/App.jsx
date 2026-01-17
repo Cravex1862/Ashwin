@@ -493,14 +493,12 @@ function App() {
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">20</span>
-                        {/* Start coding session */}
                         <span className="text-gray-500">// Start coding session</span>
                       </div>
                       <div className="flex">
                         <span className="text-gray-600 w-8 text-right mr-4">21</span>
                         <span className="text-[#dcdcaa]">drinkCoffee</span>
                         <span className="text-white">();</span>
-                        {/* ☕ First cup! */}
                         <span className="text-gray-500"> // ☕ First cup!</span>
                       </div>
                     </div>
