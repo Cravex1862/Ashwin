@@ -17,6 +17,10 @@ function App() {
     { name: 'MongoDB', icon: '/icons/mongodb.webp' },
     { name: 'Figma', icon: '/icons/figma.png' },
     { name: 'Tailwind', icon: '/icons/tailwind.webp' },
+    { name: 'Blender', icon: '/icons/blender.png' },
+    { name: 'Fusion 360', icon: '/icons/fusion360.png' },
+    { name: 'Arduino', icon: '/icons/arduino.png' },
+    { name: 'Raspberry Pi', icon: '/icons/raspberrypi.png' },
   ];
 
   return (
@@ -287,6 +291,7 @@ function App() {
               {skills.map((skill, index) => (
                 <div
                   key={index}
+                  title={skill.name}
                   className="aspect-square rounded-lg flex items-center justify-center hover:scale-105 transition cursor-pointer p-4 relative group overflow-hidden"
                 >
                   {/* Static border on default state */}
@@ -304,6 +309,7 @@ function App() {
                   <img 
                     src={skill.icon} 
                     alt={skill.name} 
+                    title={skill.name}
                     className="w-full h-full object-contain relative z-10"
                   />
                 </div>
