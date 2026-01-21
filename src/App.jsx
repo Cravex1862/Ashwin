@@ -197,7 +197,7 @@ function App() {
             <div className="relative">
               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
                 <div className="w-full h-full rounded-full bg-gray-300 overflow-hidden">
-                  <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover" />
+                  <img src="/profile.png" alt="Profile" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
