@@ -201,7 +201,13 @@ function App() {
             <div className="relative">
               <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
                 <div className="w-full h-full rounded-full bg-gray-300 overflow-hidden">
-                  <img src="/profile.png" alt="Profile" className="w-full h-full object-cover" />
+                  <img
+                    src="/profile.png"
+                    alt="Profile"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -306,10 +312,12 @@ function App() {
                   <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                   
                   {/* Image */}
-                  <img 
-                    src={skill.icon} 
-                    alt={skill.name} 
+                  <img
+                    src={skill.icon}
+                    alt={skill.name}
                     title={skill.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain relative z-10"
                   />
                 </div>

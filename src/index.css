@@ -58,7 +58,7 @@ code {
 }
 /* Skills icon sizing */
 .skills-grid img {
-  width: 300px;
-  height: 300px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
 }
