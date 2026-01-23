@@ -6,7 +6,7 @@ function App() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const filters = ['All', 'Games', 'Apps', 'E-commerce'];
+  const filters = ['All', 'Games', 'Apps', 'Websites' , 'Electronics'];
 
   const skills = [
     { name: 'HTML5', icon: '/icons/html5.png' },
