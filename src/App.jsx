@@ -43,7 +43,7 @@ function App() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <h1 className="text-xl font-bold bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] bg-clip-text text-transparent">
-            Portfolio
+            Ashwin
           </h1>
           
           {/* Desktop Navigation */}
