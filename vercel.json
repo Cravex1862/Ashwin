@@ -5,6 +5,17 @@
   "outputDirectory": "build",
   "env": {
     "CI": "true"
-  }
+  },
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
+    }
+  ]
 }
 
