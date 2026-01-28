@@ -14,9 +14,17 @@ export default function CMSDashboard({ onLogout }) {
     try {
       const response = await fetch('/api/projects');
       const data = await response.json();
-      setProjects(data);
+      console.log('Dashboard fetched projects:', data);
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setProjects(data);
+      } else {
+        console.error('Projects data is not an array:', data);
+        setProjects([]);
+      }
     } catch (err) {
       console.error('Failed to fetch projects:', err);
+      setProjects([]);
     }
   };
 
@@ -99,7 +107,7 @@ export default function CMSDashboard({ onLogout }) {
             <div>
               <h2 className="text-2xl font-bold mb-4">Existing Projects</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project) => (
+                {Array.isArray(projects) && projects.map((project) => (
                   <div
                     key={project._id}
                     className="bg-[#0f0f0f] border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition"
