@@ -39,9 +39,11 @@ function App() {
     try {
       const response = await fetch('/api/projects');
       const data = await response.json();
+      console.log('Fetched projects:', data);
       setProjects(data);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
+      setProjects([]); // Set empty array on error
     }
   };
 
@@ -332,7 +334,7 @@ function App() {
 
             {/* Project Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {projects
+              {projects && Array.isArray(projects) && projects
                 .filter(project => activeFilter === 'All' || project.category === activeFilter)
                 .map((project) => (
                   <div
@@ -370,7 +372,7 @@ function App() {
                     </div>
                   </div>
                 ))}
-              {projects.filter(project => activeFilter === 'All' || project.category === activeFilter).length === 0 && (
+              {(!projects || !Array.isArray(projects) || projects.filter(project => activeFilter === 'All' || project.category === activeFilter).length === 0) && (
                 <div className="col-span-full text-center text-gray-400 py-12">
                   No projects yet. Check back soon!
                 </div>
