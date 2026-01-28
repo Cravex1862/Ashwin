@@ -38,7 +38,7 @@ export default function ContactRequests() {
         ) : (
           contacts.map((contact) => (
             <div
-              key={contact.id}
+              key={contact._id}
               className="bg-[#0f0f0f] border border-gray-700 rounded-lg p-6 hover:border-gray-600 transition"
             >
               <div className="flex justify-between items-start mb-3">

@@ -101,7 +101,7 @@ export default function CMSDashboard({ onLogout }) {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {projects.map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="bg-[#0f0f0f] border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition"
                   >
                     {project.image && (

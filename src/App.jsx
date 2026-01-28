@@ -336,7 +336,7 @@ function App() {
                 .filter(project => activeFilter === 'All' || project.category === activeFilter)
                 .map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="aspect-video bg-gray-700/30 border border-gray-700 rounded-lg hover:border-gray-600 transition cursor-pointer overflow-hidden group relative"
                   >
                     {project.image ? (
