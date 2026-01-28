@@ -125,7 +125,7 @@ export default function CMSDashboard({ onLogout }) {
                         </a>
                       )}
                       <button
-                        onClick={() => handleDeleteProject(project.id)}
+                        onClick={() => handleDeleteProject(project._id)}
                         className="text-xs px-3 py-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
                       >
                         Delete

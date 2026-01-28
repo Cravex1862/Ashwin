@@ -1,54 +1,53 @@
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
-const contactsFile = path.join(process.cwd(), 'data', 'contacts.json');
+const uri = process.env.MONGODB_URI;
+let cachedClient = null;
 
-function ensureDataDir() {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+async function connectToDatabase() {
+  if (cachedClient) {
+    return cachedClient;
   }
-  if (!fs.existsSync(contactsFile)) {
-    fs.writeFileSync(contactsFile, JSON.stringify([]));
-  }
+
+  const client = new MongoClient(uri);
+  await client.connect();
+  cachedClient = client;
+  return client;
 }
 
-function getContacts() {
-  ensureDataDir();
-  const data = fs.readFileSync(contactsFile, 'utf8');
-  return JSON.parse(data);
-}
-
-function saveContacts(contacts) {
-  ensureDataDir();
-  fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
-}
-
-export default function handler(req, res) {
-  const authHeader = req.headers.authorization;
-
-  if (req.method === 'POST') {
-    // Public endpoint - anyone can submit contact form
-    const newContact = {
-      id: Date.now().toString(),
-      ...req.body,
-      createdAt: new Date().toISOString()
-    };
-    const contacts = getContacts();
-    contacts.push(newContact);
-    saveContacts(contacts);
-    return res.status(201).json({ success: true });
+export default async function handler(req, res) {
+  if (!uri) {
+    return res.status(500).json({ error: 'Database not configured' });
   }
 
-  // Protected - only authenticated users can view
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  try {
+    const client = await connectToDatabase();
+    const db = client.db('portfolio');
+    const contacts = db.collection('contacts');
 
-  if (req.method === 'GET') {
-    const contacts = getContacts();
-    return res.status(200).json(contacts);
-  }
+    // POST - Public endpoint to submit contact form
+    if (req.method === 'POST') {
+      const newContact = {
+        ...req.body,
+        createdAt: new Date()
+      };
+      const result = await contacts.insertOne(newContact);
+      return res.status(201).json({ success: true, _id: result.insertedId });
+    }
 
-  return res.status(405).json({ error: 'Method not allowed' });
+    // GET - Protected endpoint to view contacts
+    if (req.method === 'GET') {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const allContacts = await contacts.find({}).sort({ createdAt: -1 }).toArray();
+      return res.status(200).json(allContacts);
+    }
+
+    return res.status(405).json({ error: 'Method not allowed' });
+  } catch (error) {
+    console.error('Database error:', error);
+    return res.status(500).json({ error: 'Database operation failed', message: error.message });
+  }
 }

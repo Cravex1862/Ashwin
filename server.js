@@ -53,9 +53,9 @@ app.post('/api/projects', (req, res) => {
   
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
   const newProject = {
-    id: Date.now().toString(),
+    _id: Date.now().toString(),
     ...req.body,
-    createdAt: new Date().toISOString()
+    createdAt: new Date()
   };
   projects.push(newProject);
   fs.writeFileSync(projectsFile, JSON.stringify(projects, null, 2));
@@ -70,7 +70,7 @@ app.delete('/api/projects', (req, res) => {
   
   const { id } = req.query;
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
-  const filtered = projects.filter(p => p.id !== id);
+  const filtered = projects.filter(p => p._id !== id);
   fs.writeFileSync(projectsFile, JSON.stringify(filtered, null, 2));
   res.json({ success: true });
 });
@@ -79,9 +79,9 @@ app.delete('/api/projects', (req, res) => {
 app.post('/api/contacts', (req, res) => {
   const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
   const newContact = {
-    id: Date.now().toString(),
+    _id: Date.now().toString(),
     ...req.body,
-    createdAt: new Date().toISOString()
+    createdAt: new Date()
   };
   contacts.push(newContact);
   fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
