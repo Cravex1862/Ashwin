@@ -28,8 +28,15 @@ if (!fs.existsSync(contactsFile)) {
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
   
-  const validUsername = process.env.CMS_USERNAME || 'Cravex1';
-  const validPassword = process.env.CMS_PASSWORD || 'uppercase@2790';
+  const validUsername = process.env.CMS_USERNAME;
+  const validPassword = process.env.CMS_PASSWORD;
+  
+  if (!validUsername || !validPassword) {
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Server error: CMS credentials not configured' 
+    });
+  }
   
   if (username === validUsername && password === validPassword) {
     const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
