@@ -1,12 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Envelope, GithubLogo, StackOverflowLogo } from "@phosphor-icons/react";
+import CMSLogin from './components/CMS/Login';
+import CMSDashboard from './components/CMS/Dashboard';
 
 
 function App() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCMS, setShowCMS] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [projects, setProjects] = useState([]);
 
   const filters = ['All', 'Games', 'Apps', 'Websites' , 'Electronics'];
+
+  // Check for CMS route
+  useEffect(() => {
+    const checkRoute = () => {
+      if (window.location.hash === '#/cms') {
+        setShowCMS(true);
+        const token = localStorage.getItem('cms_token');
+        if (token) setIsLoggedIn(true);
+      } else {
+        setShowCMS(false);
+      }
+    };
+    
+    checkRoute();
+    window.addEventListener('hashchange', checkRoute);
+    return () => window.removeEventListener('hashchange', checkRoute);
+  }, []);
+
+  // Fetch projects from API
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('/api/projects');
+      const data = await response.json();
+      setProjects(data);
+    } catch (err) {
+      console.error('Failed to fetch projects:', err);
+    }
+  };
+
+  const handleCMSLogin = (token) => {
+    setIsLoggedIn(true);
+  };
+
+  const handleCMSLogout = () => {
+    localStorage.removeItem('cms_token');
+    setIsLoggedIn(false);
+    setShowCMS(false);
+    window.location.hash = '';
+  };
+
+  // Show CMS if route is /cms
+  if (showCMS) {
+    if (isLoggedIn) {
+      return <CMSDashboard onLogout={handleCMSLogout} />;
+    } else {
+      return <CMSLogin onLogin={handleCMSLogin} />;
+    }
+  }
 
   const skills = [
     { name: 'HTML5', icon: '/icons/html5.png' },
@@ -221,7 +278,7 @@ function App() {
                 Hi, I'm Ashwin – a Full-Stack Web Developer passionate about the MERN stack. Creating fast, scalable, and user-friendly web apps.
               </p>
               <div className="flex gap-3">
-                <button className="px-5 py-2 rounded font-semibold relative group overflow-hidden">
+                <a href="#contact" className="px-5 py-2 rounded font-semibold relative group overflow-hidden no-underline">
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
                       <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
@@ -232,15 +289,15 @@ function App() {
                   </span>
                   <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
                   <span className="relative z-10">Hire Me</span>
-                </button>
-                <button className="px-5 py-2 rounded relative group overflow-hidden">
+                </a>
+                <a href="#projects" className="px-5 py-2 rounded relative group overflow-hidden no-underline">
                   <span className="absolute inset-0 rounded border-2 border-gray-600 group-hover:border-transparent transition"></span>
                   <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
                     <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                   </span>
                   <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
                   <span className="relative z-10">Projects</span>
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -275,12 +332,49 @@ function App() {
 
             {/* Project Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, index) => (
-                <div
-                  key={index}
-                  className="aspect-video bg-gray-700/30 border border-gray-700 rounded-lg hover:border-gray-600 transition cursor-pointer"
-                ></div>
-              ))}
+              {projects
+                .filter(project => activeFilter === 'All' || project.category === activeFilter)
+                .map((project) => (
+                  <div
+                    key={project.id}
+                    className="aspect-video bg-gray-700/30 border border-gray-700 rounded-lg hover:border-gray-600 transition cursor-pointer overflow-hidden group relative"
+                  >
+                    {project.image ? (
+                      <img 
+                        src={project.image} 
+                        alt={project.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900">
+                        <span className="text-gray-500 text-sm">{project.name}</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition p-4 flex flex-col justify-between">
+                      <div>
+                        <h4 className="font-bold mb-2">{project.name}</h4>
+                        <p className="text-xs text-gray-300 line-clamp-3">{project.description}</p>
+                      </div>
+                      {project.demoLink && (
+                        <a
+                          href={project.demoLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs px-3 py-1.5 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] hover:opacity-80 transition inline-block text-center"
+                        >
+                          View Demo
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              {projects.filter(project => activeFilter === 'All' || project.category === activeFilter).length === 0 && (
+                <div className="col-span-full text-center text-gray-400 py-12">
+                  No projects yet. Check back soon!
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -339,22 +433,87 @@ function App() {
               <p className="text-gray-400 mb-6">
                 I'm open for freelance projects, collaborations, or just chat. Let's connect!
               </p>
-              <a href="mailto:ashwinchoudhury1310@gmail.com" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden no-underline">
-                <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
-                  <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
-                    <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
+              
+              {/* Contact Form */}
+              <form className="space-y-4 mb-6" onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = {
+                  name: formData.get('name'),
+                  email: formData.get('email'),
+                  reason: formData.get('reason')
+                };
+                try {
+                  const response = await fetch('/api/contacts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                  });
+                  if (response.ok) {
+                    alert('Message sent successfully!');
+                    e.target.reset();
+                  }
+                } catch (err) {
+                  alert('Failed to send message. Please try again.');
+                }
+              }}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    required
+                    className="w-full px-4 py-3 rounded bg-[#0f0f0f] border-2 border-gray-700 focus:border-transparent focus:outline-none text-white placeholder-gray-500 relative z-10"
+                    style={{
+                      background: 'linear-gradient(#0f0f0f, #0f0f0f) padding-box, linear-gradient(135deg, #76B2F0, #F61BA9) border-box',
+                      borderColor: 'transparent'
+                    }}
+                  />
+                </div>
+                <div className="relative">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    required
+                    className="w-full px-4 py-3 rounded bg-[#0f0f0f] border-2 border-gray-700 focus:border-transparent focus:outline-none text-white placeholder-gray-500 relative z-10"
+                    style={{
+                      background: 'linear-gradient(#0f0f0f, #0f0f0f) padding-box, linear-gradient(135deg, #76B2F0, #F61BA9) border-box',
+                      borderColor: 'transparent'
+                    }}
+                  />
+                </div>
+                <div className="relative">
+                  <textarea
+                    name="reason"
+                    placeholder="Reason for contacting"
+                    rows="4"
+                    required
+                    className="w-full px-4 py-3 rounded bg-[#0f0f0f] border-2 border-gray-700 focus:border-transparent focus:outline-none text-white placeholder-gray-500 resize-none relative z-10"
+                    style={{
+                      background: 'linear-gradient(#0f0f0f, #0f0f0f) padding-box, linear-gradient(135deg, #76B2F0, #F61BA9) border-box',
+                      borderColor: 'transparent'
+                    }}
+                  ></textarea>
+                </div>
+                <button type="submit" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden">
+                  <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
+                    <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
+                      <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
+                    </span>
                   </span>
-                </span>
-                <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                  <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
-                </span>
-                <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
-                <span className="relative z-10 flex items-center gap-2">
-                  <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
-                  <span>Contact</span>
-                </span>
-              </a>
-              <div className="flex gap-4 mt-4">
+                  <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
+                    <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                  </span>
+                  <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
+                    <span>Send Message</span>
+                  </span>
+                </button>
+              </form>
+              
+              <div className="flex gap-4">
                 <a href="https://github.com/Cravex1862" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
                   <GithubLogo size={32} weight="duotone" className="bg-gradient-to-r from-[#76B2F0] to-[#F61BA9]" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                 </a>
@@ -532,6 +691,19 @@ function App() {
           </div>
         </div>
       </section>
+      
+      {/* Footer */}
+      <footer className="border-t border-gray-800 bg-[#0a0a0a]">
+        <div className="max-w-7xl mx-auto px-6 py-6 text-center text-gray-500 text-sm">
+          <p>© {new Date().getFullYear()} Ashwin Choudhury. All rights reserved.</p>
+          <a 
+            href="#/cms" 
+            className="text-gray-600 hover:text-gray-400 transition text-xs mt-2 inline-block"
+          >
+            Admin
+          </a>
+        </div>
+      </footer>
       </div>
     </>
   );
