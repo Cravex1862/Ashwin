@@ -253,13 +253,13 @@ function App() {
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] text-white" style={{ marginTop: 0, paddingTop: 0 }}>
         {/* Hero - Add padding top to account for fixed navbar */}
-        <section id="intro" className="border-b border-gray-800" style={{ paddingTop: '80px' }}>
+        <section id="intro" className="border-b border-gray-800 flex items-center justify-center" style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
           <div className="max-w-7xl mx-auto px-6 py-16">
 
-          <div className="flex flex-col items-center text-center gap-6">
+          <div className="flex items-center justify-center gap-12">
             {/* Profile Image */}
-            <div className="relative">
-              <div className="w-48 h-48 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
+            <div className="relative flex-shrink-0">
+              <div className="w-64 h-64 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
                 <div className="w-full h-full rounded-full bg-gray-300 overflow-hidden">
                   <img
                     src="/profile.png"
@@ -277,10 +277,10 @@ function App() {
               <h1 className="text-4xl md:text-5xl font-bold mb-2">
                 Ashwin Choudhury
               </h1>
-              <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+              <p className="text-gray-400 mb-6 max-w-xl">
                 Hi, I'm Ashwin – a Full-Stack Web Developer skilled in the MERN stack, creating fast, scalable, and user-friendly web apps.
               </p>
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3">
                 <a href="#contact" className="px-5 py-2 rounded font-semibold relative group overflow-hidden no-underline">
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
