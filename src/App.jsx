@@ -10,6 +10,7 @@ function App() {
   const [showCMS, setShowCMS] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const filters = ['All', 'Games', 'Apps', 'Websites' , 'Electronics'];
 
@@ -339,6 +340,7 @@ function App() {
                 .map((project) => (
                   <div
                     key={project._id}
+                    onClick={() => setSelectedProject(project)}
                     className="aspect-video bg-gray-700/30 border border-gray-700 rounded-lg hover:border-gray-600 transition cursor-pointer overflow-hidden group relative"
                   >
                     {project.image ? (
@@ -365,9 +367,15 @@ function App() {
                             href={project.githubLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 transition flex-1 text-center"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs px-3 py-1.5 rounded relative group/btn overflow-hidden flex-1 text-center"
                           >
-                            GitHub
+                            <span className="absolute inset-0 rounded border-2 border-gray-600 group-hover/btn:border-transparent transition"></span>
+                            <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
+                              <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                            </span>
+                            <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                            <span className="relative z-10">GitHub</span>
                           </a>
                         )}
                         {project.demoLink && (
@@ -375,9 +383,19 @@ function App() {
                             href={project.demoLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs px-3 py-1.5 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] hover:opacity-80 transition flex-1 text-center"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs px-3 py-1.5 rounded font-semibold relative group/btn overflow-hidden flex-1 text-center"
                           >
-                            View Demo
+                            <span className="absolute inset-0 rounded opacity-100 group-hover/btn:opacity-0 transition">
+                              <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
+                                <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
+                              </span>
+                            </span>
+                            <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
+                              <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                            </span>
+                            <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                            <span className="relative z-10">View Demo</span>
                           </a>
                         )}
                       </div>
@@ -393,6 +411,94 @@ function App() {
           </div>
         </div>
       </section>
+
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center px-6 py-10"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-3xl bg-[#0f0f0f] border border-gray-700 rounded-2xl overflow-hidden shadow-2xl"
+          >
+            <div className="absolute inset-0 rounded-2xl pointer-events-none">
+              <div className="absolute inset-0 opacity-40 bg-[conic-gradient(from_180deg,#76B2F0,#F61BA9,#76B2F0)]"></div>
+            </div>
+            <div className="relative z-10 bg-[#0f0f0f]">
+              {selectedProject.image && (
+                <div className="relative h-56 md:h-64">
+                  <img
+                    src={selectedProject.image}
+                    alt={selectedProject.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-black/30 to-transparent"></div>
+                </div>
+              )}
+              <div className="p-8">
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition"
+                aria-label="Close project"
+              >
+                ✕
+              </button>
+
+                <h3 className="text-4xl md:text-5xl font-mono tracking-tight mb-4">
+                  {selectedProject.name}
+                </h3>
+
+                <p className="text-gray-300 leading-relaxed mb-6">
+                  {selectedProject.description}
+                </p>
+
+                <div className="border-t border-dashed border-gray-700 my-6"></div>
+
+                <div className="flex flex-wrap gap-3">
+                  {selectedProject.demoLink && (
+                    <a
+                      href={selectedProject.demoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2 rounded font-semibold relative group overflow-hidden"
+                    >
+                      <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
+                        <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
+                          <span className="absolute inset-[2px] rounded bg-[#0f0f0f]"></span>
+                        </span>
+                      </span>
+                      <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
+                        <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                      </span>
+                      <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
+                      <span className="relative z-10">View Demo</span>
+                    </a>
+                  )}
+                  {selectedProject.githubLink && (
+                    <a
+                      href={selectedProject.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-2 rounded font-semibold relative group overflow-hidden"
+                    >
+                      <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
+                        <span className="absolute inset-0 rounded border-2 border-gray-600"></span>
+                      </span>
+                      <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
+                        <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                      </span>
+                      <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
+                      <span className="relative z-10">GitHub Repo</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Skills */}
       <section id="skills" className="border-b border-gray-800">
@@ -510,7 +616,7 @@ function App() {
                     }}
                   ></textarea>
                 </div>
-                <button type="submit" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden">
+                <button type="submit" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)]">
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
                       <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
