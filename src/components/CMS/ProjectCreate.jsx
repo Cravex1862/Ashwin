@@ -6,6 +6,7 @@ export default function ProjectCreate({ onProjectCreated }) {
     description: '',
     image: '',
     demoLink: '',
+    githubLink: '',
     category: 'All'
   });
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export default function ProjectCreate({ onProjectCreated }) {
           description: '',
           image: '',
           demoLink: '',
+          githubLink: '',
           category: 'All'
         });
         onProjectCreated();
@@ -111,6 +113,18 @@ export default function ProjectCreate({ onProjectCreated }) {
             value={formData.demoLink}
             onChange={handleChange}
             placeholder="https://example.com/demo or https://youtube.com/watch?v=..."
+            className="w-full px-4 py-3 rounded bg-[#1a1a1a] border-2 border-gray-700 focus:border-[#76B2F0] focus:outline-none text-white"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">GitHub Repository Link</label>
+          <input
+            type="url"
+            name="githubLink"
+            value={formData.githubLink}
+            onChange={handleChange}
+            placeholder="https://github.com/username/repo"
             className="w-full px-4 py-3 rounded bg-[#1a1a1a] border-2 border-gray-700 focus:border-[#76B2F0] focus:outline-none text-white"
           />
         </div>

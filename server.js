@@ -105,6 +105,19 @@ app.get('/api/contacts', (req, res) => {
   res.json(contacts);
 });
 
+app.delete('/api/contacts', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  const { id } = req.query;
+  const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
+  const filtered = contacts.filter(c => c._id !== id);
+  fs.writeFileSync(contactsFile, JSON.stringify(filtered, null, 2));
+  res.json({ success: true });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Local API server running on http://localhost:${PORT}`);
   console.log(`📡 Frontend should proxy API requests to this server`);

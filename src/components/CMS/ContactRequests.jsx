@@ -23,6 +23,29 @@ export default function ContactRequests() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this contact request?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('cms_token');
+      const response = await fetch(`/api/contacts?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setContacts(contacts.filter(c => c._id !== id));
+      } else {
+        alert('Failed to delete contact request');
+      }
+    } catch (err) {
+      console.error('Failed to delete contact:', err);
+      alert('Failed to delete contact request');
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-8">Loading...</div>;
   }
@@ -51,9 +74,17 @@ export default function ContactRequests() {
                     {contact.email}
                   </a>
                 </div>
-                <span className="text-xs text-gray-500">
-                  {new Date(contact.createdAt).toLocaleDateString()} {new Date(contact.createdAt).toLocaleTimeString()}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500">
+                    {new Date(contact.createdAt).toLocaleDateString()} {new Date(contact.createdAt).toLocaleTimeString()}
+                  </span>
+                  <button
+                    onClick={() => handleDelete(contact._id)}
+                    className="text-red-400 hover:text-red-300 transition text-sm px-3 py-1 rounded border border-red-400 hover:border-red-300"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
               <p className="text-gray-300 whitespace-pre-wrap">{contact.reason}</p>
             </div>

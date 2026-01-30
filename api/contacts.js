@@ -45,6 +45,24 @@ export default async function handler(req, res) {
       return res.status(200).json(allContacts);
     }
 
+    // DELETE - Protected endpoint to delete a contact
+    if (req.method === 'DELETE') {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { id } = req.query;
+      const { ObjectId } = await import('mongodb');
+      const result = await contacts.deleteOne({ _id: new ObjectId(id) });
+      
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ error: 'Contact not found' });
+      }
+      
+      return res.status(200).json({ success: true });
+    }
+
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     console.error('Database error:', error);

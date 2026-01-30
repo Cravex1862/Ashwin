@@ -359,16 +359,28 @@ function App() {
                         <h4 className="font-bold mb-2">{project.name}</h4>
                         <p className="text-xs text-gray-300 line-clamp-3">{project.description}</p>
                       </div>
-                      {project.demoLink && (
-                        <a
-                          href={project.demoLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs px-3 py-1.5 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] hover:opacity-80 transition inline-block text-center"
-                        >
-                          View Demo
-                        </a>
-                      )}
+                      <div className="flex gap-2">
+                        {project.githubLink && (
+                          <a
+                            href={project.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 transition flex-1 text-center"
+                          >
+                            GitHub
+                          </a>
+                        )}
+                        {project.demoLink && (
+                          <a
+                            href={project.demoLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs px-3 py-1.5 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] hover:opacity-80 transition flex-1 text-center"
+                          >
+                            View Demo
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
