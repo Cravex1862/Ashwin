@@ -46,6 +46,27 @@ export default async function handler(req, res) {
       return res.status(201).json({ ...newProject, _id: result.insertedId });
     }
 
+    // PUT - Update project
+    if (req.method === 'PUT') {
+      const { id } = req.query;
+      const { ObjectId } = await import('mongodb');
+      const updateData = {
+        ...req.body,
+        updatedAt: new Date()
+      };
+      
+      const result = await projects.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateData }
+      );
+      
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ error: 'Project not found' });
+      }
+      
+      return res.status(200).json({ success: true, ...updateData });
+    }
+
     // DELETE - Delete project
     if (req.method === 'DELETE') {
       const { id } = req.query;

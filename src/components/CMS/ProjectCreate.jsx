@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function ProjectCreate({ onProjectCreated }) {
+export default function ProjectCreate({ onProjectCreated, editingProject, onCancelEdit }) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -10,6 +10,19 @@ export default function ProjectCreate({ onProjectCreated }) {
     category: 'All'
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (editingProject) {
+      setFormData({
+        name: editingProject.name || '',
+        description: editingProject.description || '',
+        image: editingProject.image || '',
+        demoLink: editingProject.demoLink || '',
+        githubLink: editingProject.githubLink || '',
+        category: editingProject.category || 'All'
+      });
+    }
+  }, [editingProject]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,8 +34,13 @@ export default function ProjectCreate({ onProjectCreated }) {
 
     try {
       const token = localStorage.getItem('cms_token');
-      const response = await fetch('/api/projects', {
-        method: 'POST',
+      const url = editingProject 
+        ? `/api/projects?id=${editingProject._id}` 
+        : '/api/projects';
+      const method = editingProject ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -40,10 +58,11 @@ export default function ProjectCreate({ onProjectCreated }) {
           category: 'All'
         });
         onProjectCreated();
-        alert('Project created successfully!');
+        if (onCancelEdit) onCancelEdit();
+        alert(editingProject ? 'Project updated successfully!' : 'Project created successfully!');
       }
     } catch (err) {
-      alert('Failed to create project');
+      alert(editingProject ? 'Failed to update project' : 'Failed to create project');
     } finally {
       setLoading(false);
     }
@@ -51,7 +70,17 @@ export default function ProjectCreate({ onProjectCreated }) {
 
   return (
     <div className="bg-[#0f0f0f] border border-gray-700 rounded-lg p-6">
-      <h2 className="text-2xl font-bold mb-6">Create New Project</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">{editingProject ? 'Edit Project' : 'Create New Project'}</h2>
+        {editingProject && onCancelEdit && (
+          <button
+            onClick={onCancelEdit}
+            className="px-4 py-2 text-sm rounded bg-gray-700 hover:bg-gray-600 transition"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">Project Name</label>
@@ -138,7 +167,7 @@ export default function ProjectCreate({ onProjectCreated }) {
             <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
           </span>
           <span className="relative z-10">
-            {loading ? 'Creating...' : 'Create Project'}
+            {loading ? (editingProject ? 'Updating...' : 'Creating...') : (editingProject ? 'Update Project' : 'Create Project')}
           </span>
         </button>
       </form>

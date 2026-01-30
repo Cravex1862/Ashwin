@@ -69,6 +69,31 @@ app.post('/api/projects', (req, res) => {
   res.status(201).json(newProject);
 });
 
+app.put('/api/projects', (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  const { id } = req.query;
+  const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
+  const index = projects.findIndex(p => p._id === id);
+  
+  if (index === -1) {
+    return res.status(404).json({ error: 'Project not found' });
+  }
+  
+  projects[index] = {
+    ...projects[index],
+    ...req.body,
+    _id: id,
+    updatedAt: new Date()
+  };
+  
+  fs.writeFileSync(projectsFile, JSON.stringify(projects, null, 2));
+  res.json(projects[index]);
+});
+
 app.delete('/api/projects', (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

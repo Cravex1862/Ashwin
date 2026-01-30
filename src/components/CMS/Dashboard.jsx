@@ -5,6 +5,7 @@ import ContactRequests from './ContactRequests';
 export default function CMSDashboard({ onLogout }) {
   const [activeTab, setActiveTab] = useState('projects');
   const [projects, setProjects] = useState([]);
+  const [editingProject, setEditingProject] = useState(null);
 
   useEffect(() => {
     fetchProjects();
@@ -30,6 +31,16 @@ export default function CMSDashboard({ onLogout }) {
 
   const handleProjectCreated = () => {
     fetchProjects();
+    setEditingProject(null);
+  };
+
+  const handleEditProject = (project) => {
+    setEditingProject(project);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProject(null);
   };
 
   const handleDeleteProject = async (id) => {
@@ -102,7 +113,11 @@ export default function CMSDashboard({ onLogout }) {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {activeTab === 'projects' && (
           <div className="space-y-8">
-            <ProjectCreate onProjectCreated={handleProjectCreated} />
+            <ProjectCreate 
+              onProjectCreated={handleProjectCreated} 
+              editingProject={editingProject}
+              onCancelEdit={handleCancelEdit}
+            />
             
             <div>
               <h2 className="text-2xl font-bold mb-4">Existing Projects</h2>
@@ -132,6 +147,12 @@ export default function CMSDashboard({ onLogout }) {
                           View Demo
                         </a>
                       )}
+                      <button
+                        onClick={() => handleEditProject(project)}
+                        className="text-xs px-3 py-1 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() => handleDeleteProject(project._id)}
                         className="text-xs px-3 py-1 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
