@@ -368,13 +368,13 @@ function App() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="text-xs px-3 py-1.5 rounded relative group/btn overflow-hidden flex-1 text-center"
+                            className="text-xs px-3 py-1.5 rounded font-semibold relative group/btn overflow-hidden flex-1 text-center"
                           >
                             <span className="absolute inset-0 rounded border-2 border-gray-600 group-hover/btn:border-transparent transition"></span>
                             <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
-                              <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                              <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                             </span>
-                            <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                            <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                             <span className="relative z-10">GitHub</span>
                           </a>
                         )}
@@ -388,13 +388,13 @@ function App() {
                           >
                             <span className="absolute inset-0 rounded opacity-100 group-hover/btn:opacity-0 transition">
                               <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
-                                <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
+                                <span className="absolute inset-[2px] rounded bg-[#0f0f0f]"></span>
                               </span>
                             </span>
                             <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
-                              <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                              <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                             </span>
-                            <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                            <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                             <span className="relative z-10">View Demo</span>
                           </a>
                         )}
@@ -470,7 +470,7 @@ function App() {
                         </span>
                       </span>
                       <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                        <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                        <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                       </span>
                       <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                       <span className="relative z-10">View Demo</span>
@@ -487,7 +487,7 @@ function App() {
                         <span className="absolute inset-0 rounded border-2 border-gray-600"></span>
                       </span>
                       <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                        <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                        <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                       </span>
                       <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                       <span className="relative z-10">GitHub Repo</span>
@@ -619,13 +619,13 @@ function App() {
                 <button type="submit" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)]">
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
-                      <span className="absolute inset-[2px] rounded bg-[#1a1a1a]"></span>
+                      <span className="absolute inset-[2px] rounded bg-[#0f0f0f]"></span>
                     </span>
                   </span>
                   <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                    <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                    <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                   </span>
-                  <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
+                  <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                   <span className="relative z-10 flex items-center gap-2">
                     <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                     <span>Send Message</span>
