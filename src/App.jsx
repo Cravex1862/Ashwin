@@ -372,7 +372,7 @@ function App() {
                           >
                             <span className="absolute inset-0 rounded border-2 border-gray-600 group-hover/btn:border-transparent transition"></span>
                             <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
-                              <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                              <span className="absolute inset-[-300%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                             </span>
                             <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                             <span className="relative z-10">GitHub</span>
@@ -392,7 +392,7 @@ function App() {
                               </span>
                             </span>
                             <span className="absolute inset-0 rounded opacity-0 group-hover/btn:opacity-100 transition">
-                              <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                              <span className="absolute inset-[-300%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                             </span>
                             <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                             <span className="relative z-10">View Demo</span>
@@ -470,7 +470,7 @@ function App() {
                         </span>
                       </span>
                       <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                        <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                        <span className="absolute inset-[-300%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                       </span>
                       <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                       <span className="relative z-10">View Demo</span>
@@ -487,7 +487,7 @@ function App() {
                         <span className="absolute inset-0 rounded border-2 border-gray-600"></span>
                       </span>
                       <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                        <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                        <span className="absolute inset-[-300%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                       </span>
                       <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                       <span className="relative z-10">GitHub Repo</span>
@@ -519,7 +519,7 @@ function App() {
                   
                   {/* Animated gradient border on hover */}
                   <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                    <span className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                    <span className="absolute inset-[-300%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                   </span>
                   
                   {/* Background */}
@@ -623,7 +623,7 @@ function App() {
                     </span>
                   </span>
                   <span className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition">
-                    <span className="absolute inset-[-100%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
+                    <span className="absolute inset-[-300%] rounded bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
                   </span>
                   <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                   <span className="relative z-10 flex items-center gap-2">
