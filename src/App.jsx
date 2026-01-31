@@ -637,7 +637,7 @@ function App() {
                 <a href="https://github.com/Cravex1862" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
                   <GithubLogo size={32} weight="duotone" className="bg-gradient-to-r from-[#76B2F0] to-[#F61BA9]" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                 </a>
-                <a href="https://stackoverflow.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
+                <a href="https://stackoverflow.com/users/32289677/cravex1862" target="_blank" rel="noopener noreferrer" className="w-12 h-12 hover:scale-110 transition flex items-center justify-center">
                   <StackOverflowLogo size={32} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                 </a>
               </div>
