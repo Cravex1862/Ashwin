@@ -256,7 +256,7 @@ function App() {
         <section id="intro" className="border-b border-gray-800 flex items-center justify-center" style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
           <div className="max-w-7xl mx-auto px-6 py-16">
 
-          <div className="flex items-center justify-center gap-12">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             {/* Profile Image */}
             <div className="relative flex-shrink-0">
               <div className="w-64 h-64 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
@@ -273,14 +273,14 @@ function App() {
             </div>
 
             {/* Hero Text */}
-            <div>
+            <div className="max-w-xl text-center md:text-left">
               <h1 className="text-4xl md:text-5xl font-bold mb-2">
                 Ashwin Choudhury
               </h1>
-              <p className="text-gray-400 mb-6 max-w-xl">
+              <p className="text-gray-400 mb-6">
                 Hi, I'm Ashwin – a Full-Stack Web Developer skilled in the MERN stack, creating fast, scalable, and user-friendly web apps.
               </p>
-              <div className="flex gap-3">
+              <div className="flex gap-3 justify-center md:justify-start">
                 <a href="#contact" className="px-5 py-2 rounded font-semibold relative group overflow-hidden no-underline">
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
