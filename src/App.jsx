@@ -260,7 +260,7 @@ function App() {
             {/* Profile Image */}
             <div className="relative flex-shrink-0">
               <div className="w-64 h-64 rounded-full bg-gradient-to-br from-[#76B2F0] to-[#F61BA9] p-1">
-                <div className="w-full h-full rounded-full bg-transparent overflow-hidden">
+                <div className="w-full h-full rounded-full bg-[#171717] overflow-hidden">
                   <img
                     src="/profile.png"
                     alt="Profile"
