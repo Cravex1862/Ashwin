@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Envelope, GithubLogo, StackOverflowLogo } from "@phosphor-icons/react";
 import CMSLogin from './components/CMS/Login';
 import CMSDashboard from './components/CMS/Dashboard';
@@ -11,6 +11,10 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [isSendingContact, setIsSendingContact] = useState(false);
+  const [contactSubmitMessage, setContactSubmitMessage] = useState('');
+  const [showSendTick, setShowSendTick] = useState(false);
+  const sendTickTimerRef = useRef(null);
 
   const filters = ['All', 'Games', 'Apps', 'Websites' , 'Electronics'];
 
@@ -34,6 +38,14 @@ function App() {
   // Fetch projects from API
   useEffect(() => {
     fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (sendTickTimerRef.current) {
+        clearTimeout(sendTickTimerRef.current);
+      }
+    };
   }, []);
 
   const fetchProjects = async () => {
@@ -82,6 +94,58 @@ function App() {
     { name: 'Arduino', icon: '/icons/arduino.png' },
     { name: 'Raspberry Pi', icon: '/icons/raspberrypi.png' },
   ];
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+
+    // Prevent fast double submits if users click repeatedly.
+    if (isSendingContact) {
+      return;
+    }
+
+    setShowSendTick(true);
+    if (sendTickTimerRef.current) {
+      clearTimeout(sendTickTimerRef.current);
+    }
+    sendTickTimerRef.current = setTimeout(() => {
+      setShowSendTick(false);
+      sendTickTimerRef.current = null;
+    }, 1400);
+
+    const formData = new FormData(e.target);
+    const data = {
+      name: String(formData.get('name') || '').trim(),
+      email: String(formData.get('email') || '').trim(),
+      reason: String(formData.get('reason') || '').trim()
+    };
+
+    setIsSendingContact(true);
+    setContactSubmitMessage('Sending your message...');
+
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.status === 409) {
+        setContactSubmitMessage('Message already received. No need to resend.');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to send contact message');
+      }
+
+      setContactSubmitMessage('Message sent successfully. I will get back to you soon.');
+      e.target.reset();
+    } catch (err) {
+      setContactSubmitMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSendingContact(false);
+    }
+  };
 
   return (
     <>
@@ -555,28 +619,7 @@ function App() {
               </p>
               
               {/* Contact Form */}
-              <form className="space-y-4 mb-6" onSubmit={async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                  name: formData.get('name'),
-                  email: formData.get('email'),
-                  reason: formData.get('reason')
-                };
-                try {
-                  const response = await fetch('/api/contacts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                  });
-                  if (response.ok) {
-                    alert('Message sent successfully!');
-                    e.target.reset();
-                  }
-                } catch (err) {
-                  alert('Failed to send message. Please try again.');
-                }
-              }}>
+              <form className="space-y-4 mb-6" onSubmit={handleContactSubmit}>
                 <div className="relative">
                   <input
                     type="text"
@@ -616,7 +659,11 @@ function App() {
                     }}
                   ></textarea>
                 </div>
-                <button type="submit" className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)]">
+                <button
+                  type="submit"
+                  disabled={isSendingContact}
+                  className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)] disabled:opacity-60 disabled:cursor-not-allowed"
+                >
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
                     <span className="absolute inset-0 rounded bg-gradient-to-r from-[#76B2F0] to-[#F61BA9] p-[2px]">
                       <span className="absolute inset-[2px] rounded bg-[#0f0f0f]"></span>
@@ -628,9 +675,22 @@ function App() {
                   <span className="absolute inset-[2px] rounded bg-[#0f0f0f] z-[1]"></span>
                   <span className="relative z-10 flex items-center gap-2">
                     <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
-                    <span>Send Message</span>
+                    <span>{isSendingContact ? 'Sending...' : 'Send Message'}</span>
+                    <span
+                      className={`contact-send-tick ${showSendTick ? 'visible' : ''}`}
+                      aria-hidden="true"
+                    >
+                      <svg viewBox="0 0 18 18" className="contact-send-tick-svg">
+                        <path d="M3.5 9.5l3.2 3.3 7.8-7.6" />
+                      </svg>
+                    </span>
                   </span>
                 </button>
+                {contactSubmitMessage && (
+                  <p className="text-sm text-gray-300" role="status" aria-live="polite">
+                    {contactSubmitMessage}
+                  </p>
+                )}
               </form>
               
               <div className="flex gap-4">

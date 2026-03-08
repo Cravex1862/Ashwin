@@ -26,8 +26,35 @@ export default async function handler(req, res) {
 
     // POST - Public endpoint to submit contact form
     if (req.method === 'POST') {
+      const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+      const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+      const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : '';
+
+      if (!name || !email || !reason) {
+        return res.status(400).json({ error: 'Name, email, and reason are required' });
+      }
+
+      // Block rapid duplicate submissions from accidental repeated clicks.
+      const duplicateWindowStart = new Date(Date.now() - 60 * 1000);
+      const existingRecent = await contacts.findOne({
+        name,
+        email,
+        reason,
+        createdAt: { $gte: duplicateWindowStart }
+      });
+
+      if (existingRecent) {
+        return res.status(409).json({
+          success: false,
+          duplicate: true,
+          message: 'This message was already received recently.'
+        });
+      }
+
       const newContact = {
-        ...req.body,
+        name,
+        email,
+        reason,
         createdAt: new Date()
       };
       const result = await contacts.insertOne(newContact);
