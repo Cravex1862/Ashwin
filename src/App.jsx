@@ -13,8 +13,11 @@ function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isSendingContact, setIsSendingContact] = useState(false);
   const [contactSubmitMessage, setContactSubmitMessage] = useState('');
+  const [isContactMessageVisible, setIsContactMessageVisible] = useState(false);
   const [showSendTick, setShowSendTick] = useState(false);
   const sendTickTimerRef = useRef(null);
+  const contactMessageFadeTimerRef = useRef(null);
+  const contactMessageClearTimerRef = useRef(null);
 
   const filters = ['All', 'Games', 'Apps', 'Websites' , 'Electronics'];
 
@@ -44,6 +47,14 @@ function App() {
     return () => {
       if (sendTickTimerRef.current) {
         clearTimeout(sendTickTimerRef.current);
+      }
+
+      if (contactMessageFadeTimerRef.current) {
+        clearTimeout(contactMessageFadeTimerRef.current);
+      }
+
+      if (contactMessageClearTimerRef.current) {
+        clearTimeout(contactMessageClearTimerRef.current);
       }
     };
   }, []);
@@ -88,6 +99,30 @@ function App() {
     });
   };
 
+  const showContactMessage = (message, autoHide = true) => {
+    setContactSubmitMessage(message);
+    setIsContactMessageVisible(true);
+
+    if (contactMessageFadeTimerRef.current) {
+      clearTimeout(contactMessageFadeTimerRef.current);
+    }
+
+    if (contactMessageClearTimerRef.current) {
+      clearTimeout(contactMessageClearTimerRef.current);
+    }
+
+    if (autoHide) {
+      contactMessageFadeTimerRef.current = setTimeout(() => {
+        setIsContactMessageVisible(false);
+      }, 2600);
+
+      contactMessageClearTimerRef.current = setTimeout(() => {
+        setContactSubmitMessage('');
+        contactMessageClearTimerRef.current = null;
+      }, 3000);
+    }
+  };
+
   // Show CMS if route is /cms
   if (showCMS) {
     if (isLoggedIn) {
@@ -115,8 +150,6 @@ function App() {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
 
-    triggerSendTick();
-
     // Prevent fast double submits if users click repeatedly.
     if (isSendingContact) {
       return;
@@ -130,7 +163,7 @@ function App() {
     };
 
     setIsSendingContact(true);
-    setContactSubmitMessage('Sending your message...');
+    showContactMessage('Sending your message...', false);
 
     try {
       const response = await fetch('/api/contacts', {
@@ -140,7 +173,7 @@ function App() {
       });
 
       if (response.status === 409) {
-        setContactSubmitMessage('Message already received. No need to resend.');
+        showContactMessage('Message already received. No need to resend.');
         return;
       }
 
@@ -148,10 +181,11 @@ function App() {
         throw new Error('Failed to send contact message');
       }
 
-      setContactSubmitMessage('Message sent successfully. I will get back to you soon.');
+      triggerSendTick();
+      showContactMessage('Message sent successfully. I will get back to you soon.');
       e.target.reset();
     } catch (err) {
-      setContactSubmitMessage('Failed to send message. Please try again.');
+      showContactMessage('Failed to send message. Please try again.');
     } finally {
       setIsSendingContact(false);
     }
@@ -672,7 +706,6 @@ function App() {
                 <button
                   type="submit"
                   disabled={isSendingContact}
-                  onClick={triggerSendTick}
                   className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
@@ -687,18 +720,21 @@ function App() {
                   <span className="relative z-10 flex items-center gap-2">
                     <Envelope size={26} weight="duotone" style={{ background: 'linear-gradient(135deg, #76B2F0 0%, #F61BA9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }} />
                     <span>{isSendingContact ? 'Sending...' : 'Send Message'}</span>
-                    <span
-                      className={`contact-send-tick ${showSendTick ? 'visible' : ''}`}
-                      aria-hidden="true"
-                    >
+                  </span>
+                  {showSendTick && (
+                    <span className="contact-send-tick visible" aria-hidden="true">
                       <svg viewBox="0 0 18 18" className="contact-send-tick-svg">
                         <path d="M3.5 9.5l3.2 3.3 7.8-7.6" />
                       </svg>
                     </span>
-                  </span>
+                  )}
                 </button>
                 {contactSubmitMessage && (
-                  <p className="text-sm text-gray-300" role="status" aria-live="polite">
+                  <p
+                    className={`text-sm text-gray-300 contact-submit-message ${isContactMessageVisible ? 'visible' : ''}`}
+                    role="status"
+                    aria-live="polite"
+                  >
                     {contactSubmitMessage}
                   </p>
                 )}

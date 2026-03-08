@@ -88,13 +88,18 @@ code {
 }
 
 .contact-send-tick {
-  width: 1rem;
-  height: 1rem;
-  display: inline-flex;
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%) scale(0.5);
+  width: 0.95rem;
+  height: 0.95rem;
+  display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: scale(0.5);
+  pointer-events: none;
+  z-index: 20;
 }
 
 .contact-send-tick-svg {
@@ -118,4 +123,13 @@ code {
 
 .contact-send-tick.visible .contact-send-tick-svg path {
   animation: tick-draw 320ms ease-out 70ms forwards;
+}
+
+.contact-submit-message {
+  opacity: 0;
+  transition: opacity 350ms ease;
+}
+
+.contact-submit-message.visible {
+  opacity: 1;
 }
