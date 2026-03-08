@@ -71,6 +71,23 @@ function App() {
     window.location.hash = '';
   };
 
+  const triggerSendTick = () => {
+    setShowSendTick(false);
+
+    if (sendTickTimerRef.current) {
+      clearTimeout(sendTickTimerRef.current);
+    }
+
+    // Force reflow timing so the animation can replay on rapid repeated attempts.
+    requestAnimationFrame(() => {
+      setShowSendTick(true);
+      sendTickTimerRef.current = setTimeout(() => {
+        setShowSendTick(false);
+        sendTickTimerRef.current = null;
+      }, 1400);
+    });
+  };
+
   // Show CMS if route is /cms
   if (showCMS) {
     if (isLoggedIn) {
@@ -98,19 +115,12 @@ function App() {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
 
+    triggerSendTick();
+
     // Prevent fast double submits if users click repeatedly.
     if (isSendingContact) {
       return;
     }
-
-    setShowSendTick(true);
-    if (sendTickTimerRef.current) {
-      clearTimeout(sendTickTimerRef.current);
-    }
-    sendTickTimerRef.current = setTimeout(() => {
-      setShowSendTick(false);
-      sendTickTimerRef.current = null;
-    }, 1400);
 
     const formData = new FormData(e.target);
     const data = {
@@ -662,6 +672,7 @@ function App() {
                 <button
                   type="submit"
                   disabled={isSendingContact}
+                  onClick={triggerSendTick}
                   className="px-6 py-3 rounded inline-flex items-center gap-2 font-semibold relative group overflow-hidden transition-shadow group-hover:shadow-[0_0_20px_rgba(118,178,240,0.45),0_0_30px_rgba(246,27,169,0.35)] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
