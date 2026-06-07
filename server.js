@@ -6,14 +6,32 @@ const path = require('path');
 const app = express();
 const PORT = 3001;
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://ashwinchoudhury.me'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+app.use(express.json({ limit: '10mb' }));
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://fonts.googleapis.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+  );
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+  next();
+});
 
 const dataDir = path.join(__dirname, 'data');
 const projectsFile = path.join(dataDir, 'projects.json');
 const contactsFile = path.join(dataDir, 'contacts.json');
 
-// Ensure data directory exists
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
@@ -24,29 +42,23 @@ if (!fs.existsSync(contactsFile)) {
   fs.writeFileSync(contactsFile, JSON.stringify([]));
 }
 
-// Auth login
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
-  
   const validUsername = process.env.CMS_USERNAME;
   const validPassword = process.env.CMS_PASSWORD;
-  
+
   if (!validUsername || !validPassword) {
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Server error: CMS credentials not configured' 
-    });
+    return res.status(500).json({ success: false, message: 'Server error: CMS credentials not configured' });
   }
-  
+
   if (username === validUsername && password === validPassword) {
     const token = Buffer.from(`${username}:${Date.now()}`).toString('base64');
     return res.json({ success: true, token, message: 'Login successful' });
   }
-  
+
   return res.status(401).json({ success: false, message: 'Invalid credentials' });
 });
 
-// Projects
 app.get('/api/projects', (req, res) => {
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
   res.json(projects);
@@ -57,7 +69,7 @@ app.post('/api/projects', (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
   const newProject = {
     _id: Date.now().toString(),
@@ -74,22 +86,22 @@ app.put('/api/projects', (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const { id } = req.query;
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
   const index = projects.findIndex(p => p._id === id);
-  
+
   if (index === -1) {
     return res.status(404).json({ error: 'Project not found' });
   }
-  
+
   projects[index] = {
     ...projects[index],
     ...req.body,
     _id: id,
     updatedAt: new Date()
   };
-  
+
   fs.writeFileSync(projectsFile, JSON.stringify(projects, null, 2));
   res.json(projects[index]);
 });
@@ -99,7 +111,7 @@ app.delete('/api/projects', (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const { id } = req.query;
   const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
   const filtered = projects.filter(p => p._id !== id);
@@ -107,7 +119,6 @@ app.delete('/api/projects', (req, res) => {
   res.json({ success: true });
 });
 
-// Contacts
 app.post('/api/contacts', (req, res) => {
   const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
   const newContact = {
@@ -125,7 +136,7 @@ app.get('/api/contacts', (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
   res.json(contacts);
 });
@@ -135,12 +146,56 @@ app.delete('/api/contacts', (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   const { id } = req.query;
   const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
   const filtered = contacts.filter(c => c._id !== id);
   fs.writeFileSync(contactsFile, JSON.stringify(filtered, null, 2));
   res.json({ success: true });
+});
+
+// Sitemap endpoint
+app.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Content-Type', 'application/xml');
+
+  const date = new Date().toISOString().split('T')[0];
+  const pages = [
+    { loc: '/', priority: '1.0', changefreq: 'weekly' },
+    { loc: '/#intro', priority: '0.9', changefreq: 'monthly' },
+    { loc: '/#projects', priority: '0.9', changefreq: 'weekly' },
+    { loc: '/#skills', priority: '0.8', changefreq: 'monthly' },
+    { loc: '/#contact', priority: '0.8', changefreq: 'monthly' },
+  ];
+
+  try {
+    const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
+    projects.forEach(p => {
+      const slug = (p.name || p._id).toLowerCase().replace(/[^\w]+/g, '-').replace(/^-|-$/g, '');
+      pages.push({ loc: `/#/project/${slug}`, priority: '0.7', changefreq: 'monthly' });
+    });
+  } catch {}
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  for (const page of pages) {
+    xml += `  <url>\n    <loc>https://ashwinchoudhury.me${page.loc}</loc>\n    <lastmod>${date}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+  }
+  xml += '</urlset>';
+  res.send(xml);
+});
+
+// Robots.txt endpoint
+app.get('/robots.txt', (req, res) => {
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(`User-agent: *
+Allow: /
+Allow: /#/projects
+Allow: /#/skills
+Allow: /#/contact
+Disallow: /#/cms
+Disallow: /api/
+
+Sitemap: https://ashwinchoudhury.me/sitemap.xml
+`);
 });
 
 app.listen(PORT, () => {

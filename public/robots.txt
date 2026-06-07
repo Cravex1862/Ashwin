@@ -1,0 +1,13 @@
+# robots.txt for ashwinchoudhury.me
+User-agent: *
+Allow: /
+Allow: /#/projects
+Allow: /#/skills
+Allow: /#/contact
+Disallow: /#/cms
+Disallow: /api/
+Disallow: /server.js
+
+Sitemap: https://ashwinchoudhury.me/sitemap.xml
+
+# Crawl-delay: 10
