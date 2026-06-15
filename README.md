@@ -1,18 +1,17 @@
 # Ashwin
 
-# 🛠️ Setup Guide - Build Your Own Portfolio CMS
+# 🚀 Ashwin's Immersive 3D Portfolio & CMS
 
-This project is a **portfolio website with an integrated CMS** for managing projects and contact requests. Clone this repo and follow the steps below to deploy your own version!
+Welcome to my portfolio! This project is a custom-built, dual-architecture portfolio that features a clean responsive interface (V1) and an incredible immersive **3D WebGL cinematic experience** (V2), all powered by a unified headless CMS.
 
----
+## 🌟 Technical Highlights
 
-## 📋 What You Get
-
-✅ React portfolio with responsive design  
-✅ Built-in CMS to manage projects without touching code  
-✅ Contact form that saves submissions  
-✅ Authentication system  
-✅ Deployed on Vercel (free tier compatible)  
+- **Immersive 3D Environment (V2):** Built entirely with **Three.js** and **WebGL**, featuring a 15,000-star particle universe, floating neon geometric primitives, and parallax star dust.
+- **Cinematic Scroll Navigation:** Uses **GSAP ScrollTrigger** to map user scrolling directly to a complex 3D camera flight path, traveling through 5 distinct spatial phases.
+- **Reactive Audio System:** Integrated **Web Audio API** synthesizers that generate perfectly-timed, pitch-shifted click and whoosh sound effects tied to 3D navigation and UI interactions.
+- **Advanced Glassmorphism & SVG Geometry:** Features ultra-premium frosted glass backgrounds alongside mathematical SVG `linearGradient` rotating neon borders that wrap perfectly around the UI.
+- **Dual Architecture Integration:** Click the version toggle in the bottom corner to seamlessly hot-swap between the 2D DOM version (V1) and the 3D WebGL version (V2). Both immediately sync with the unified database.
+- **Integrated Custom CMS:** A secure, built-in Content Management System to upload, edit, and manage 3D project cards without touching a single line of code.
 
 ---
 
