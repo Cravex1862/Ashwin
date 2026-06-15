@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { playClickSound } from '../../utils/audio';
 
 export default function ProjectsSection3D({ phase, projects, onProjectClick }) {
