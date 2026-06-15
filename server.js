@@ -59,99 +59,127 @@ app.post('/api/auth/login', (req, res) => {
   return res.status(401).json({ success: false, message: 'Invalid credentials' });
 });
 
-app.get('/api/projects', (req, res) => {
-  const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
-  res.json(projects);
+app.get('/api/projects', async (req, res) => {
+  try {
+    const data = await fs.promises.readFile(projectsFile, 'utf8');
+    res.json(JSON.parse(data));
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to load projects' });
+  }
 });
 
-app.post('/api/projects', (req, res) => {
+app.post('/api/projects', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
-  const newProject = {
-    _id: Date.now().toString(),
-    ...req.body,
-    createdAt: new Date()
-  };
-  projects.push(newProject);
-  fs.writeFileSync(projectsFile, JSON.stringify(projects, null, 2));
-  res.status(201).json(newProject);
+  try {
+    const projects = JSON.parse(await fs.promises.readFile(projectsFile, 'utf8'));
+    const newProject = {
+      _id: Date.now().toString(),
+      ...req.body,
+      createdAt: new Date()
+    };
+    projects.push(newProject);
+    await fs.promises.writeFile(projectsFile, JSON.stringify(projects, null, 2));
+    res.status(201).json(newProject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create project' });
+  }
 });
 
-app.put('/api/projects', (req, res) => {
+app.put('/api/projects', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { id } = req.query;
-  const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
-  const index = projects.findIndex(p => p._id === id);
+  try {
+    const { id } = req.query;
+    const projects = JSON.parse(await fs.promises.readFile(projectsFile, 'utf8'));
+    const index = projects.findIndex(p => p._id === id);
 
-  if (index === -1) {
-    return res.status(404).json({ error: 'Project not found' });
+    if (index === -1) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    projects[index] = {
+      ...projects[index],
+      ...req.body,
+      _id: id,
+      updatedAt: new Date()
+    };
+
+    await fs.promises.writeFile(projectsFile, JSON.stringify(projects, null, 2));
+    res.json(projects[index]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update project' });
   }
-
-  projects[index] = {
-    ...projects[index],
-    ...req.body,
-    _id: id,
-    updatedAt: new Date()
-  };
-
-  fs.writeFileSync(projectsFile, JSON.stringify(projects, null, 2));
-  res.json(projects[index]);
 });
 
-app.delete('/api/projects', (req, res) => {
+app.delete('/api/projects', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { id } = req.query;
-  const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
-  const filtered = projects.filter(p => p._id !== id);
-  fs.writeFileSync(projectsFile, JSON.stringify(filtered, null, 2));
-  res.json({ success: true });
+  try {
+    const { id } = req.query;
+    const projects = JSON.parse(await fs.promises.readFile(projectsFile, 'utf8'));
+    const filtered = projects.filter(p => p._id !== id);
+    await fs.promises.writeFile(projectsFile, JSON.stringify(filtered, null, 2));
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
 });
 
-app.post('/api/contacts', (req, res) => {
-  const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
-  const newContact = {
-    _id: Date.now().toString(),
-    ...req.body,
-    createdAt: new Date()
-  };
-  contacts.push(newContact);
-  fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
-  res.status(201).json({ success: true });
+app.post('/api/contacts', async (req, res) => {
+  try {
+    const contacts = JSON.parse(await fs.promises.readFile(contactsFile, 'utf8'));
+    const newContact = {
+      _id: Date.now().toString(),
+      ...req.body,
+      createdAt: new Date()
+    };
+    contacts.push(newContact);
+    await fs.promises.writeFile(contactsFile, JSON.stringify(contacts, null, 2));
+    res.status(201).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to submit contact' });
+  }
 });
 
-app.get('/api/contacts', (req, res) => {
+app.get('/api/contacts', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
-  res.json(contacts);
+  try {
+    const contacts = JSON.parse(await fs.promises.readFile(contactsFile, 'utf8'));
+    res.json(contacts);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to load contacts' });
+  }
 });
 
-app.delete('/api/contacts', (req, res) => {
+app.delete('/api/contacts', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { id } = req.query;
-  const contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf8'));
-  const filtered = contacts.filter(c => c._id !== id);
-  fs.writeFileSync(contactsFile, JSON.stringify(filtered, null, 2));
-  res.json({ success: true });
+  try {
+    const { id } = req.query;
+    const contacts = JSON.parse(await fs.promises.readFile(contactsFile, 'utf8'));
+    const filtered = contacts.filter(c => c._id !== id);
+    await fs.promises.writeFile(contactsFile, JSON.stringify(filtered, null, 2));
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete contact' });
+  }
 });
 
 // Sitemap endpoint
@@ -168,7 +196,7 @@ app.get('/sitemap.xml', (req, res) => {
   ];
 
   try {
-    const projects = JSON.parse(fs.readFileSync(projectsFile, 'utf8'));
+    const projects = JSON.parse(await fs.promises.readFile(projectsFile, 'utf8'));
     projects.forEach(p => {
       const slug = (p.name || p._id).toLowerCase().replace(/[^\w]+/g, '-').replace(/^-|-$/g, '');
       pages.push({ loc: `/#/project/${slug}`, priority: '0.7', changefreq: 'monthly' });

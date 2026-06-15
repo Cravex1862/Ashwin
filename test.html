@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holographic Command Center</title>
+    <style>
+        /* Base Reset & Futuristic Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #020205;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ffff;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through to 3D scene */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .filter-menu {
+            pointer-events: auto; /* Enable clicks on buttons */
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+        }
+
+        .filter-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Project Details Panel (Hidden by default) */
+        #project-details {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 350px;
+            background: rgba(2, 2, 5, 0.8);
+            border: 1px solid #00ffff;
+            padding: 2rem;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        #project-details.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #project-details h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #00ffff;
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .close-btn {
+            background: #ff0055;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        /* Crosshair */
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-layer">
+        <header>
+            <h1>SYS.CMD // Portfolio</h1>
+            <p>Initializing Holographic Interface...</p>
+        </header>
+
+        <div class="crosshair"></div>
+
+        <div class="filter-menu">
+            <button class="filter-btn">All Systems</button>
+            <button class="filter-btn">Frontend</button>
+            <button class="filter-btn">Backend</button>
+        </div>
+
+        <div id="project-details">
+            <h2 id="proj-title">Project Name</h2>
+            <p id="proj-tech">Tech Stack: ...</p>
+            <p id="proj-desc">Detailed project breakdown. This is where you explain the problem you solved and the impact it had.</p>
+            <button class="close-btn" id="close-panel">Disengage View</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. SETUP SCENE, CAMERA, RENDERER ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020205, 0.02); // Dark void fog
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const initialCameraZ = 30;
+        camera.position.z = initialCameraZ;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // --- 2. LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0x002244, 1);
+        scene.add(ambientLight);
+
+        const cyanLight = new THREE.PointLight(0x00ffff, 2, 50);
+        cyanLight.position.set(10, 10, 10);
+        scene.add(cyanLight);
+
+        const magentaLight = new THREE.PointLight(0xff00ff, 2, 50);
+        magentaLight.position.set(-10, -10, 10);
+        scene.add(magentaLight);
+
+        // --- 3. CREATE HOLOGRAPHIC CHIPS (PROJECTS) ---
+        const projectsData = [
+            { id: 1, title: "Quantum E-Commerce", tech: "React, Node.js, Stripe", desc: "A high-performance storefront with sub-second load times." },
+            { id: 2, title: "Neural Dashboard", tech: "Three.js, D3, Python", desc: "Interactive data visualization for complex machine learning models." },
+            { id: 3, title: "Mobile Nexus", tech: "React Native, Firebase", desc: "Cross-platform mobile application connecting local tech hubs." },
+            { id: 4, title: "API Gateway", tech: "Go, Docker, AWS", desc: "Microservices architecture handling 1M+ requests daily." },
+            { id: 5, title: "Cyber Security Audit", tech: "Python, Bash", desc: "Automated vulnerability scanner for internal networks." }
+        ];
+
+        const chips = [];
+        const chipGroup = new THREE.Group();
+        scene.add(chipGroup);
+
+        // Geometry for the chips
+        const geometry = new THREE.BoxGeometry(4, 6, 0.5);
+        
+        // Materials: Glassy/Holographic look + Wireframe
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0x00ffff,
+            metalness: 0.1,
+            roughness: 0.2,
+            transmission: 0.9, // glass effect
+            transparent: true,
+            opacity: 0.6,
+        });
+        const wireframeMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0x00ffff, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.3 
+        });
+
+        // Distribute chips in a circular orbit
+        const radius = 15;
+        projectsData.forEach((data, index) => {
+            const angle = (index / projectsData.length) * Math.PI * 2;
+            
+            const chip = new THREE.Mesh(geometry, material);
+            const wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+            chip.add(wireframe); // Add wireframe to the chip
+
+            // Position in a circle
+            chip.position.x = Math.cos(angle) * radius;
+            chip.position.z = Math.sin(angle) * radius;
+            chip.position.y = (Math.random() - 0.5) * 5; // Slight vertical variation
+            
+            // Face the center
+            chip.lookAt(0, 0, 0);
+
+            // Store data inside the 3D object for later use
+            chip.userData = data;
+            
+            chips.push(chip);
+            chipGroup.add(chip);
+        });
+
+        // --- 4. BACKGROUND PARTICLES (DATA DUST) ---
+        const particleGeo = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const posArray = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 100;
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.1,
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.5
+        });
+        const particlesMesh = new THREE.Points(particleGeo, particleMat);
+        scene.add(particlesMesh);
+
+        // --- 5. INTERACTION (RAYCASTING) ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let hoveredChip = null;
+        let activeChip = null;
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        window.addEventListener('click', () => {
+            if (hoveredChip && hoveredChip !== activeChip) {
+                // User clicked a chip
+                activeChip = hoveredChip;
+                
+                // Stop the idle rotation
+                gsap.killTweensOf(chipGroup.rotation);
+
+                // Calculate where the camera should go to look at the chip
+                // We want to be slightly in front of it
+                const targetPosition = new THREE.Vector3();
+                activeChip.getWorldPosition(targetPosition);
+                
+                // Move camera to the chip using GSAP
+                gsap.to(camera.position, {
+                    x: targetPosition.x * 1.5,
+                    y: targetPosition.y,
+                    z: targetPosition.z * 1.5,
+                    duration: 1.5,
+                    ease: "power3.inOut",
+                    onUpdate: () => {
+                        camera.lookAt(targetPosition);
+                    }
+                });
+
+                // Make the clicked chip glow brighter
+                activeChip.material.color.setHex(0xffffff);
+                activeChip.material.opacity = 0.9;
+
+                // Update UI HTML
+                document.getElementById('proj-title').innerText = activeChip.userData.title;
+                document.getElementById('proj-tech').innerText = "Tech: " + activeChip.userData.tech;
+                document.getElementById('proj-desc').innerText = activeChip.userData.desc;
+                
+                // Show UI Panel
+                document.getElementById('project-details').classList.add('active');
+            }
+        });
+
+        // Close Panel Button
+        document.getElementById('close-panel').addEventListener('click', () => {
+            document.getElementById('project-details').classList.remove('active');
+            
+            if(activeChip) {
+                // Reset chip color
+                activeChip.material.color.setHex(0x00ffff);
+                activeChip.material.opacity = 0.6;
+                activeChip = null;
+            }
+
+            // Move camera back to center
+            gsap.to(camera.position, {
+                x: 0,
+                y: 0,
+                z: initialCameraZ,
+                duration: 1.5,
+                ease: "power3.inOut",
+                onUpdate: () => {
+                    camera.lookAt(0,0,0);
+                }
+            });
+        });
+
+        // --- 6. ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotate the whole group slowly if no chip is clicked
+            if(!activeChip) {
+                chipGroup.rotation.y += 0.002;
+            }
+
+            // Animate particles slowly
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+
+            // Hover logic
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(chips);
+
+            if (intersects.length > 0) {
+                if (hoveredChip !== intersects[0].object) {
+                    // Mouse enter
+                    if(hoveredChip && hoveredChip !== activeChip) {
+                        gsap.to(hoveredChip.scale, {x: 1, y: 1, z: 1, duration: 0.3});
+                    }
+                    hoveredChip = intersects[0].object;
+                    if(hoveredChip !== activeChip) {
+                        gsap.to(hoveredChip.scale, {x: 1.2, y: 1.2, z: 1.2, duration: 0.3});
+                        document.body.style.cursor = 'pointer';
+                    }
+                }
+            } else {
+                if (hoveredChip) {
+                    // Mouse leave
+                    if(hoveredChip !== activeChip) {
+                        gsap.to(hoveredChip.scale, {x: 1, y: 1, z: 1, duration: 0.3});
+                    }
+                    hoveredChip = null;
+                    document.body.style.cursor = 'default';
+                }
+            }
+
+            // Gently float the chips up and down
+            chips.forEach((chip, i) => {
+                if(chip !== activeChip) {
+                    chip.position.y += Math.sin(elapsedTime * 2 + i) * 0.01;
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // --- 7. HANDLE RESIZE ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

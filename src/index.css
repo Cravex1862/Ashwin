@@ -4,6 +4,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #050505;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f0f0f;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #76B2F0, #F61BA9);
+  border-radius: 8px;
+  border: 2px solid #0f0f0f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #F61BA9, #76B2F0);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
