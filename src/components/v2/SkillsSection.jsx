@@ -53,7 +53,7 @@ export default function SkillsSection({ phase }) {
             <div className="absolute inset-0 rounded-lg border border-gray-700/50 group-hover:border-transparent transition z-0 pointer-events-none"></div>
             
             <div className="relative z-10 flex flex-col items-center pointer-events-none">
-              <img src={skill.img} alt={skill.name} className="w-16 h-16 mb-4 object-contain" />
+              <img src={skill.img} alt={`${skill.name} icon`} className="w-16 h-16 mb-4 object-contain" loading="lazy" decoding="async" width="64" height="64" />
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#ffffff', fontSize: '1.4rem', fontWeight: 'bold' }}>{skill.name}</span>
               <p style={{ fontFamily: "'Raleway', sans-serif", color: '#ffffff', fontSize: '1rem', textAlign: 'center', margin: '10px 0 0 0' }}>{skill.desc}</p>
             </div>

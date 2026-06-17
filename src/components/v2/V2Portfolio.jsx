@@ -8,20 +8,91 @@ import HeroPortal from './HeroPortal';
 import SkillsSection from './SkillsSection';
 import ProjectsSection3D from './ProjectsSection3D';
 import ContactSection3D from './ContactSection3D';
+import ProjectDetail3D from './ProjectDetail3D';
+import SEOHead from '../SEO/SEOHead';
+import { PersonSchema, WebSiteSchema, BreadcrumbSchema, ProjectSchemas } from '../SEO/JSONLD';
 import { playClickSound, playWhooshSound } from '../../utils/audio';
+import { SITE_URL } from '../../utils/seo';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 export default function V2Portfolio({ projects, onProjectClick }) {
   const canvasRef = useRef();
   const containerRef = useRef();
+  const cameraRef = useRef(null);
+  const scrollTriggerInstanceRef = useRef(null);
+  const savedCameraState = useRef(null);
   const [phase, setPhase] = useState(1);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const scrollToSection = (targetY) => {
     playClickSound();
-    playWhooshSound(500);
-    gsap.to(window, { scrollTo: { y: targetY, autoKill: false }, duration: 1.0, ease: "power2.out" });
+    playWhooshSound(150);
+    gsap.to(window, { scrollTo: { y: targetY, autoKill: false }, duration: 0.45, ease: "power3.out" });
   };
+
+  const handleV2ProjectClick = (project) => {
+    if (!project || !cameraRef.current) return;
+    playClickSound();
+    playWhooshSound(150);
+
+    const cam = cameraRef.current;
+    savedCameraState.current = {
+      px: cam.position.x, py: cam.position.y, pz: cam.position.z,
+      rx: cam.rotation.x, ry: cam.rotation.y, rz: cam.rotation.z,
+    };
+
+    if (scrollTriggerInstanceRef.current) {
+      scrollTriggerInstanceRef.current.disable();
+    }
+
+    gsap.to(cam.position, {
+      z: -60, x: -25, y: 15,
+      duration: 0.7, ease: 'power4.inOut',
+    });
+    gsap.to(cam.rotation, {
+      y: Math.PI * 0.7, x: -0.2, z: 0.1,
+      duration: 0.7, ease: 'power4.inOut',
+    });
+
+    setSelectedProject(project);
+  };
+
+  const handleV2ProjectBack = () => {
+    playClickSound();
+    playWhooshSound(150);
+
+    const saved = savedCameraState.current;
+    if (saved && cameraRef.current) {
+      gsap.to(cameraRef.current.position, {
+        x: saved.px, y: saved.py, z: saved.pz,
+        duration: 0.5, ease: 'power3.inOut',
+      });
+      gsap.to(cameraRef.current.rotation, {
+        x: saved.rx, y: saved.ry, z: saved.rz,
+        duration: 0.5, ease: 'power3.inOut',
+        onComplete: () => {
+          if (scrollTriggerInstanceRef.current) {
+            scrollTriggerInstanceRef.current.enable();
+          }
+        },
+      });
+    } else if (scrollTriggerInstanceRef.current) {
+      scrollTriggerInstanceRef.current.enable();
+    }
+
+    setSelectedProject(null);
+  };
+
+  // Lock body scroll while viewing a project
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedProject]);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -154,7 +225,8 @@ export default function V2Portfolio({ projects, onProjectClick }) {
       dirLight2.position.set(-10, -10, -10);
       scene.add(ambient, dirLight1, dirLight2);
 
-      camera.position.set(0, 0, 15); 
+      camera.position.set(0, 0, 15);
+      cameraRef.current = camera;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -172,6 +244,8 @@ export default function V2Portfolio({ projects, onProjectClick }) {
           }
         }
       });
+
+      scrollTriggerInstanceRef.current = tl.scrollTrigger;
 
       tl.to(camera.position, { z: 2, ease: "power2.inOut", duration: 2 }, 0);
       tl.to(introMat, { opacity: 0, duration: 1 }, 1);
@@ -269,6 +343,11 @@ export default function V2Portfolio({ projects, onProjectClick }) {
 
   return (
     <div style={{ background: '#050505', color: '#ffffff', margin: 0, padding: 0, overflowX: 'hidden' }}>
+      <SEOHead />
+      <PersonSchema />
+      <WebSiteSchema />
+      <BreadcrumbSchema items={[{ name: 'Home', url: SITE_URL }]} />
+      <ProjectSchemas projects={projects} />
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -280,13 +359,19 @@ export default function V2Portfolio({ projects, onProjectClick }) {
         
         <canvas ref={canvasRef} aria-label="Interactive 3D WebGL background environment" role="img" style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }} />
 
-        <HeroPortal phase={phase} />
-        <SkillsSection phase={phase} />
-        <ProjectsSection3D phase={phase} projects={projects} onProjectClick={onProjectClick} />
-        <ContactSection3D phase={phase} />
+        <div style={{ opacity: selectedProject ? 0 : 1, transition: 'opacity 0.4s ease', pointerEvents: selectedProject ? 'none' : undefined }}>
+          <HeroPortal phase={phase} />
+          <SkillsSection phase={phase} />
+          <ProjectsSection3D phase={phase} projects={projects} onProjectClick={handleV2ProjectClick} />
+          <ContactSection3D phase={phase} />
+        </div>
+
+        {selectedProject && (
+          <ProjectDetail3D project={selectedProject} onBack={handleV2ProjectBack} />
+        )}
 
         {/* Navigation Dots -> Text */}
-        <div className="fixed left-2 top-1/2 -translate-y-1/2 flex flex-col items-start gap-6 z-50 pointer-events-auto bg-transparent backdrop-blur-sm p-4 rounded-r-2xl border border-transparent hover:bg-white/5 transition-colors duration-300">
+        <nav aria-label="Section navigation" className="fixed left-2 top-1/2 -translate-y-1/2 flex flex-col items-start gap-6 z-50 pointer-events-auto bg-transparent backdrop-blur-sm p-4 rounded-r-2xl border border-transparent hover:bg-white/5 transition-colors duration-300" style={{ opacity: selectedProject ? 0 : 1, transition: 'opacity 0.3s ease', pointerEvents: selectedProject ? 'none' : undefined }}>
           {[
             { pNum: 1, multiplier: 0, label: "Intro" },
             { pNum: 2, multiplier: 1, label: "Skills" },
@@ -303,11 +388,12 @@ export default function V2Portfolio({ projects, onProjectClick }) {
               }`}
               title={item.label}
               aria-label={`Go to section ${item.label}`}
+              aria-current={phase === item.pNum ? 'true' : undefined}
             >
               {item.label}
             </button>
           ))}
-        </div>
+        </nav>
         
       </div>
     </div>

@@ -8,14 +8,14 @@ gsap.registerPlugin(ScrollToPlugin);
 export default function HeroPortal({ phase }) {
   const scrollToProjects = () => {
     playClickSound();
-    playWhooshSound(500);
-    gsap.to(window, { scrollTo: { y: window.innerHeight * 2, autoKill: false }, duration: 1.0, ease: 'power2.out' });
+    playWhooshSound(150);
+    gsap.to(window, { scrollTo: { y: window.innerHeight * 2, autoKill: false }, duration: 0.45, ease: 'power3.out' });
   };
 
   const scrollToContact = () => {
     playClickSound();
-    playWhooshSound(500);
-    gsap.to(window, { scrollTo: { y: window.innerHeight * 3, autoKill: false }, duration: 1.2, ease: 'power2.out' });
+    playWhooshSound(150);
+    gsap.to(window, { scrollTo: { y: window.innerHeight * 3, autoKill: false }, duration: 0.55, ease: 'power3.out' });
   };
 
   return (
@@ -28,8 +28,8 @@ export default function HeroPortal({ phase }) {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          onClick={scrollToContact} 
+        <button
+          onClick={scrollToContact}
           className="px-6 py-3 rounded font-semibold relative group overflow-hidden no-underline cursor-pointer border-none bg-transparent"
         >
           <span className="absolute inset-0 rounded opacity-100 group-hover:opacity-0 transition">
@@ -41,10 +41,10 @@ export default function HeroPortal({ phase }) {
             <span className="absolute inset-[-300%] bg-[conic-gradient(from_0deg,#76B2F0,#F61BA9,#76B2F0,#F61BA9,#76B2F0)] gradient-border-animate"></span>
           </span>
           <span className="absolute inset-[2px] rounded bg-[#1a1a1a] z-[1]"></span>
-          <span className="relative z-10" style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#ffffff', fontSize: '1.1rem' }}>Hire Me</span>
+          <span className="relative z-10" style={{ fontFamily: "'IBM Plex Mono', monospace", color: '#ffffff', fontSize: '1.1rem' }}>Contact Me</span>
         </button>
-        <button 
-          onClick={scrollToProjects} 
+        <button
+          onClick={scrollToProjects}
           className="px-6 py-3 rounded font-semibold relative group overflow-hidden no-underline cursor-pointer border-none bg-transparent"
         >
           <span className="absolute inset-0 rounded border-2 border-gray-600 group-hover:border-transparent transition"></span>

@@ -77,7 +77,7 @@ export default function ProjectsSection3D({ phase, projects, onProjectClick }) {
               <div className="relative z-10 w-full flex flex-col gap-4 p-5 h-full">
                 <div className="w-full h-48 flex-shrink-0 rounded-lg overflow-hidden bg-gray-900 border border-gray-800">
                   {p.image ? (
-                     <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                     <img src={p.image} alt={`${p.name} project screenshot`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                   ) : (
                      <div className="w-full h-full flex items-center justify-center text-gray-600 bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] font-mono text-sm">No Image</div>
                   )}

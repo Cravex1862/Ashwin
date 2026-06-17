@@ -183,7 +183,7 @@ app.delete('/api/contacts', async (req, res) => {
 });
 
 // Sitemap endpoint
-app.get('/sitemap.xml', (req, res) => {
+app.get('/sitemap.xml', async (req, res) => {
   res.setHeader('Content-Type', 'application/xml');
 
   const date = new Date().toISOString().split('T')[0];
