@@ -1,183 +1,82 @@
-# Ashwin
+# Ashwin's Immersive 3D Portfolio & CMS
 
-# 🚀 Ashwin's Immersive 3D Portfolio & CMS
+A personal portfolio featuring an interactive 3D universe and a clean, minimalist interface, integrated with a content management system.
 
-Welcome to my portfolio! This project is a custom-built, dual-architecture portfolio that features a clean responsive interface (V1) and an incredible immersive **3D WebGL cinematic experience** (V2), all powered by a unified headless CMS.
+<img width="1414" height="735" alt="Screenshot 2026-06-15 212619" src="https://github.com/user-attachments/assets/8cebff99-6fe1-4eb4-94d7-e163506cbf59" />
 
-## 🌟 Technical Highlights
+### **[Click Here to Experience the Live Demo](https://ashwinchoudhury.me)**
 
-- **Immersive 3D Environment (V2):** Built entirely with **Three.js** and **WebGL**, featuring a 15,000-star particle universe, floating neon geometric primitives, and parallax star dust.
-- **Cinematic Scroll Navigation:** Uses **GSAP ScrollTrigger** to map user scrolling directly to a complex 3D camera flight path, traveling through 5 distinct spatial phases.
-- **Reactive Audio System:** Integrated **Web Audio API** synthesizers that generate perfectly-timed, pitch-shifted click and whoosh sound effects tied to 3D navigation and UI interactions.
-- **Advanced Glassmorphism & SVG Geometry:** Features ultra-premium frosted glass backgrounds alongside mathematical SVG `linearGradient` rotating neon borders that wrap perfectly around the UI.
-- **Dual Architecture Integration:** Click the version toggle in the bottom corner to seamlessly hot-swap between the 2D DOM version (V1) and the 3D WebGL version (V2). Both immediately sync with the unified database.
-- **Integrated Custom CMS:** A secure, built-in Content Management System to upload, edit, and manage 3D project cards without touching a single line of code.
+[![Check It Out](https://img.shields.io/badge/-Check%20It%20Out-black?style=for-the-badge&logo=glow&logoColor=blue)](https://ashwinchoudhury.me)
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Features 
 
-### 1. Clone & Install
+- **Immersive 3D Environment (V2):** A 15,000-star particle universe featuring floating neon geometric primitives and parallax star dust built with Three.js.
+- **Cinematic Scroll Navigation:** User scrolling is mapped directly to a complex 3D camera flight path via GSAP ScrollTrigger.
+- **Reactive Audio System:** Web Audio API synthesizers that generate pitch-shifted sound effects dynamically tied to UI interactions.
+- **Advanced Glassmorphism & SVG Geometry:** Frosted glass interfaces bounded by mathematical SVG `linearGradient` rotating neon borders.
+- **Dual Architecture Integration:** A bottom-corner version toggle that hot-swaps between the 2D DOM layout and the 3D WebGL engine while staying synced to the database.
+- **Integrated Custom CMS:** A secure built-in portal to upload, edit, and manage 3D project cards dynamically without code changes.
+
+---
+
+## How to Run It Locally
+
+### Prerequisites
+* **Language Version:** Node JS 24.12.0 or above
+* **System Dependencies:** npm, git
+
+### 1. Clone and Install
 ```bash
-git clone <your-repo-url>
-cd portfolio-cms
+git clone [https://github.com/Cravex1862/Ashwin.git](https://github.com/Cravex1862/Ashwin.git)
 npm install
 ```
 
-### 2. Setup Environment Variables
+### 2. Set up Environment Variables
 Create a `.env.local` file in the root directory:
-```
+
+```env
 CMS_USERNAME=your_username
 CMS_PASSWORD=your_password
 ```
-> Use any credentials you want for local testing. This file is gitignored and never committed.
+> Note: These credentials are used for local testing. This file is gitignored and will never be committed.
 
 ### 3. Run Locally
 ```bash
 npm run dev
 ```
-This starts:
-- **API server:** http://localhost:3001
-- **React app:** http://localhost:3000
+Open **http://localhost:3000** to view the app, and **http://localhost:3000/#/cms** to test the CMS.
 
-### 4. Test the CMS
-- Go to http://localhost:3000/#/cms
-- Login with your credentials from `.env.local`
-- Create test projects and test the contact form
-
----
-
-## 🌐 Deploy to Vercel (Free)
-
-### Step 1: Push to GitHub
-Make sure your code is on GitHub (public or private):
-```bash
-git add .
-git commit -m "Deploy portfolio"
-git push origin main
-```
-
-### Step 2: Import to Vercel
-1. Go to [vercel.com](https://vercel.com)
-2. Sign up with GitHub
-3. Click "Add New Project"
-4. Select your repository
-5. Click "Import"
-
-### Step 3: Configure Environment Variables
-In Vercel, go to **Project Settings** → **Environment Variables** and add:
-
-| Name | Value | Environments |
-|------|-------|--------------|
-| `CMS_USERNAME` | Your chosen username | All |
-| `CMS_PASSWORD` | Your chosen password | All |
-
-> ⚠️ **Security Tip:** Use a STRONG password (at least 12 characters with mixed case, numbers, symbols)
-
-### Step 4: Deploy
-Vercel will automatically detect the build settings and deploy. Your site will be live at:
-```
-https://your-project-name.vercel.app
-```
-
----
-
-## 📝 First Steps After Deployment
-
-1. **Visit your site:** https://your-project-name.vercel.app
-2. **Access CMS:** https://your-project-name.vercel.app/#/cms
-3. **Login** with your credentials
-4. **Add your projects** using the "Create Project" feature
-5. **Update portfolio content** as needed
-
----
-
-## 🔧 Customization
-
-### Modify the Portfolio
-- **Projects data:** Edit `/src/App.jsx` to change portfolio layout
-- **Styles:** `/src/index.css` contains Tailwind CSS styles
-- **Skills/Tech:** Update the skills section in `/src/App.jsx`
-
-### Customize the CMS
-- CMS components are in `/src/components/CMS/`
-- Modify UI, add new fields, or expand functionality
-
-### Deploy a New Version
-After making changes locally:
-```bash
-git add .
-git commit -m "Update portfolio"
-git push origin main
-```
-Vercel will automatically redeploy your changes!
-
----
-
-## 🔐 Security Best Practices
-
-✅ **Environment variables only:** Credentials stored in Vercel, never in code  
-✅ **Strong passwords:** Use unique, complex passwords (12+ characters)  
-✅ **Keep `.env.local` local:** Never commit to git  
-✅ **Use `.env.example`:** Reference file for what variables are needed  
-
----
-
-## 📁 Project Structure
+### 4. Project Architecture
+The repository is split into frontend client files and serverless API handlers:
 
 ```
 .
 ├── public/              # Static assets
 ├── src/
-│   ├── App.jsx         # Main portfolio component
-│   ├── index.css       # Tailwind styles
+│   ├── App.jsx          # Main portfolio component
+│   ├── index.css        # Tailwind styles
 │   └── components/
-│       └── CMS/        # CMS components
-├── api/                # Vercel serverless functions
+│       └── CMS/         # CMS components
+├── api/                 # Vercel serverless functions
 │   └── auth/
-│       └── login.js    # Authentication endpoint
-├── server.js           # Local development API server
-├── package.json        # Dependencies
-└── .env.example        # Environment variables template
+│       └── login.js     # Authentication endpoint
+├── server.js            # Local development API server
+├── package.json         # Dependencies
+└── .env.example         # Environment variables template
 ```
 
 ---
 
-## ❓ Troubleshooting
+## How It Works
 
-### CMS login not working
-- Check that `.env.local` is created with `CMS_USERNAME` and `CMS_PASSWORD`
-- Ensure `npm run dev` is running the API server
-
-### Projects not saving
-- Make sure you're logged in to the CMS
-- Check browser console for error messages
-- Verify the API server is running on port 3001
-
-### Deployment fails on Vercel
-- Check build logs in Vercel dashboard
-- Ensure all environment variables are set
-- Try redeploying: Dashboard → Deployments → Click ... → Redeploy
+For my portfolio, I coded the 3D graphics using pure Three.js inside a React component and connected it to GSAP ScrollTrigger. Normally, making a 3D scene move when you scroll gets really glitchy, but GSAP lets me easily scrub the camera around perfectly smoothly as you scroll down the page. To make sure the site loads instantly and doesn't lag, I didn't use any heavy downloaded 3D models; instead, I generated all the shapes, stars, and colors using math and basic geometry directly in the code. Finally, to keep the 2D text and 3D graphics connected, I made the scroll animation update a simple 'phase' state, which tells the regular React text exactly when to fade in and out as the 3D camera moves to new areas.
 
 ---
 
-## 📚 Learn More
+## Credits / Acknowledgements
 
-- **React:** [react.dev](https://react.dev)
-- **Tailwind CSS:** [tailwindcss.com](https://tailwindcss.com)
-- **Vercel Docs:** [vercel.com/docs](https://vercel.com/docs)
-- **Express.js:** [expressjs.com](https://expressjs.com)
+- **Tech Stack**: Built with React and TailwindCSS for the 2D interface. The 3D environment is powered entirely by native Three.js, with GSAP (GreenSock) driving all the complex, scroll-linked camera animations and UI fade-ins.
 
----
-
-## 💬 Support
-
-If you run into issues:
-1. Check the troubleshooting section above
-2. Review the browser console (F12) for errors
-3. Check Vercel deployment logs
-4. Ensure all environment variables are correctly set
-
----
-
-Happy coding! 🚀
+- **Assets & Design**: To keep load times completely instant, no heavy 3D asset packs were used; every 3D shape, crystal, and star particle is generated procedurally via code. Iconography is provided by Phosphor Icons, and simple UI sound effects were added to enhance the spatial scroll experience.
