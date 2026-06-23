@@ -71,8 +71,7 @@ The repository is split into frontend client files and serverless API handlers:
 
 ## How It Works
 
-For my portfolio, I coded the 3D graphics using pure Three.js inside a React component and connected it to GSAP ScrollTrigger. Normally, making a 3D scene move when you scroll gets really glitchy, but GSAP lets me easily scrub the camera around perfectly smoothly as you scroll down the page. To make sure the site loads instantly and doesn't lag, I didn't use any heavy downloaded 3D models; instead, I generated all the shapes, stars, and colors using math and basic geometry directly in the code. Finally, to keep the 2D text and 3D graphics connected, I made the scroll animation update a simple 'phase' state, which tells the regular React text exactly when to fade in and out as the 3D camera moves to new areas.
-
+For my portfolio, I used pure Three.js for the 3D graphics inside a React component and hooked it up to GSAP ScrollTrigger. Normally, trying to move a 3D scene as you scroll would get really glitchy, but GSAP lets me scrub the camera around perfectly smoothly as you scroll down the page. To make sure the site loads instantly and doesn’t lag, I didn’t use any heavy downloaded 3D models; I just used math and basic geometry to generate all the shapes, stars, and colors directly in the code. Finally, to keep the 2D text and 3D graphics in sync, I had the scroll animation update a simple ‘phase’ state that tells the normal React text exactly when to fade in and out as the 3D camera moves to
 ---
 
 ## Credits / Acknowledgements
