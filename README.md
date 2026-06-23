@@ -12,12 +12,12 @@ A personal portfolio featuring an interactive 3D universe and a clean, minimalis
 
 ## Features 
 
-- **Immersive 3D Environment (V2):** A 15,000-star particle universe featuring floating neon geometric primitives and parallax star dust built with Three.js.
-- **Cinematic Scroll Navigation:** User scrolling is mapped directly to a complex 3D camera flight path via GSAP ScrollTrigger.
-- **Reactive Audio System:** Web Audio API synthesizers that generate pitch-shifted sound effects dynamically tied to UI interactions.
-- **Advanced Glassmorphism & SVG Geometry:** Frosted glass interfaces bounded by mathematical SVG `linearGradient` rotating neon borders.
-- **Dual Architecture Integration:** A bottom-corner version toggle that hot-swaps between the 2D DOM layout and the 3D WebGL engine while staying synced to the database.
-- **Integrated Custom CMS:** A secure built-in portal to upload, edit, and manage 3D project cards dynamically without code changes.
+- **Immersive 3D Environment:** An immersive particle universe built with Three.js
+- **Cinematic Scroll Navigation:** The user scrolls through the page as if they are in a spaceship navigating the universe.
+- **Reactive Audio System:** Sound Effects to make it more immersive. 
+- **Frosted glass and reactive border:** Frosted glass interfaces with rotating neon borders(when hovered).
+- **Dual Architecture Integration:** Has 2 versions, the 1st one is a simple webpage while the 2nd one is a cinematic 3D experience. Can switch b/w them via a toggle.
+- **Integrated Custom CMS:** A secure content management system via which you can upload, edit, and delete projects and view contact requests.
 
 ---
 
