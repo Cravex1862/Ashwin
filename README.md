@@ -12,11 +12,11 @@ My personal portfolio features an interactive 3D universe and a clean, minimalis
 
 ## Features 
 
--- A 3D environment to wow viewers as they go through the page.(Space Themed)
--- Has 2 versions. v1 is a basic single-page site with all the sections, while v2 is a 3D version of the site with the camera moving through space as you scroll. Can be toggled with a button
--- Both versions are connected to a single CMS and database; when you update a project, it applies to both versions. When you get a contact request from either version, it shows up in the CMS.
--- Frosted glass look because everyone is doing that now.
--- Sound effects to enhance "immersiveness".
+- A 3D environment to wow viewers as they go through the page.(Space Themed)
+- Has 2 versions. v1 is a basic single-page site with all the sections, while v2 is a 3D version of the site with the camera moving through space as you scroll. Can be toggled with a button
+- Both versions are connected to a single CMS and database; when you update a project, it applies to both versions. When you get a contact request from either version, it shows up in the CMS.
+- Frosted glass look because everyone is doing that now.
+- Sound effects to enhance "immersiveness".
 
 ---
 
@@ -57,6 +57,6 @@ For my portfolio, I used pure Three.js for the 3D graphics inside a React compon
 
 ## Credits / Acknowledgements
 
--- Used React, TailwindCSS for v1.
--- Used ThreeJS and GSAP for v2.
--- Phosphor Icons for icons.
+- Used React, TailwindCSS for v1.
+- Used ThreeJS and GSAP for v2.
+- Phosphor Icons for icons.
